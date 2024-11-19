@@ -1,0 +1,38 @@
+# conf/base/catalog.yml
+reviews:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/Reviews.csv
+
+train_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/train_data.parquet
+
+test_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/test_data.parquet
+
+train_dataset:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/train_dataset.pkl
+  backend: pickle
+
+test_dataset:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/test_dataset.pkl
+  backend: pickle
+
+tokenizer:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/tokenizer.pkl
+  backend: pickle
+
+model:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pickle.PickleDataset
+    filepath: data/06_models/model.pkl
+    backend: pickle
+
+evaluation_report:
+  type: text.TextDataset
+  filepath: data/08_reporting/evaluation_report.txt
