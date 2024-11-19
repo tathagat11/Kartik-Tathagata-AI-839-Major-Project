@@ -1,144 +1,148 @@
 import pandas as pd
 import torch
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from tqdm import tqdm
-from scipy.special import softmax
-import numpy as np
-from sklearn.metrics import classification_report
+from torch.utils.data import Dataset
+from transformers import (
+    RobertaTokenizer, 
+    RobertaForSequenceClassification, 
+    TrainingArguments, 
+    Trainer
+)
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-import joblib
+from sklearn.metrics import classification_report
+import numpy as np
 
-# Initialize tokenizer and model
-MODEL_NAME = "cardiffnlp/twitter-roberta-base-sentiment"
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+import torch
+torch.cuda.empty_cache() 
 
-# Set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = model.to(device)
+# Custom dataset class
+class ReviewDataset(Dataset):
+    def __init__(self, reviews, scores, tokenizer, max_length=512):
+        self.tokenizer = tokenizer
+        self.reviews = reviews
+        self.scores = scores
+        self.max_length = max_length
 
-def get_sentiment_scores(text):
-    # Encode text
-    encoded = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
-    encoded = {k: v.to(device) for k, v in encoded.items()}
+    def __len__(self):
+        return len(self.reviews)
+
+    def __getitem__(self, idx):
+        review = str(self.reviews[idx])
+        score = int(self.scores[idx]) - 1  
+
+        encoding = self.tokenizer(
+            review,
+            truncation=True,
+            max_length=self.max_length,
+            padding='max_length',
+            return_tensors='pt'
+        )
+
+        return {
+            'input_ids': encoding['input_ids'].flatten(),
+            'attention_mask': encoding['attention_mask'].flatten(),
+            'labels': torch.tensor(score)
+        }
+
+def compute_metrics(pred):
+    labels = pred.label_ids
+    preds = pred.predictions.argmax(-1)
     
-    # Get model output
-    with torch.no_grad():
-        output = model(**encoded)
+    # Convert back to 1-5 range for reporting
+    labels = labels + 1
+    preds = preds + 1
     
-    # Get sentiment scores
-    scores = output[0][0].cpu().numpy()
-    scores = softmax(scores)
+    return {'classification_report': classification_report(labels, preds)}
+
+def main():
+    # Load data
+    df = pd.read_csv("data/01_raw/Reviews.csv")
     
-    return scores
+    # Split data
+    train_texts, val_texts, train_scores, val_scores = train_test_split(
+        df['Text'].values, 
+        df['Score'].values,
+        test_size=0.2,
+        random_state=42,
+        stratify=df['Score'].values
+    )
 
-# Load data
-print("Loading data...")
-df = pd.read_csv("data/01_raw/Reviews.csv")
-df = df.head(5000)
+    # Initialize tokenizer and model
+    tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+    model = RobertaForSequenceClassification.from_pretrained(
+        'roberta-base',
+        num_labels=5,
+        problem_type="single_label_classification"
+    )
 
-# Process reviews to get sentiment features
-print("Processing reviews...")
-sentiment_features = []
-scores = []
+    # Create datasets
+    train_dataset = ReviewDataset(train_texts, train_scores, tokenizer)
+    val_dataset = ReviewDataset(val_texts, val_scores, tokenizer)
 
-for _, row in tqdm(df.iterrows(), total=len(df)):
-    try:
-        sentiment_scores = get_sentiment_scores(row['Text'])
-        sentiment_features.append(sentiment_scores)
-        scores.append(row['Score'])
-    except Exception as e:
-        print(f"Error processing review {row['Id']}: {e}")
-        sentiment_features.append(None)
-        scores.append(None)
+    # Calculate class weights for handling imbalance
+    labels = df['Score'].values - 1  # Convert to 0-4 range
+    class_counts = np.bincount(labels)
+    total = len(labels)
+    class_weights = torch.FloatTensor([total / count for count in class_counts])
 
-# Convert to numpy arrays and handle any failed processing
-sentiment_features = np.array([f for f in sentiment_features if f is not None])
-scores = np.array([s for s in scores if s is not None])
+    # Set training arguments
+    training_args = TrainingArguments(
+        output_dir="data/08_reporting/results",
+        num_train_epochs=3,
+        per_device_train_batch_size=8,
+        per_device_eval_batch_size=8,
+        warmup_steps=500,
+        weight_decay=0.01,
+        logging_dir="data/09_logs/roberta_base_logs",
+        logging_steps=100,
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_loss",
+        learning_rate=2e-5,
+    )
 
-# Split data for classifier training
-X_train, X_test, y_train, y_test = train_test_split(
-    sentiment_features, scores, test_size=0.2, random_state=42
-)
+    training_args = TrainingArguments(
+        output_dir="data/08_reporting/results",
+        num_train_epochs=1,              # One epoch should be sufficient for fine-tuning
+        per_device_train_batch_size=16,  # Conservative batch size for 6GB GPU
+        per_device_eval_batch_size=16,   # Same as training batch size
+        warmup_ratio=0.1,               # 10% of total steps for warmup
+        weight_decay=0.01,
+        logging_dir="data/09_logs/roberta_base_logs",
+        logging_steps=50,               # More frequent logging
+        evaluation_strategy="steps",
+        eval_steps=100,                 # Evaluate every 100 steps
+        save_strategy="steps",
+        save_steps=100,
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_loss",
+        learning_rate=2e-5,
+        fp16=True,                      # Mixed precision training - crucial for memory savings
+        gradient_accumulation_steps=2,   # Effective batch size of 32
+        max_grad_norm=1.0,              # Gradient clipping to prevent instability
+        dataloader_num_workers=2        # Don't overload system memory
+    )
 
-# Train classifier
-print("Training classifier...")
-classifier = LogisticRegression(
-    multi_class='multinomial',
-    max_iter=1000,
-    class_weight='balanced'
-)
-classifier.fit(X_train, y_train)
+    # Initialize trainer
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=val_dataset,
+        compute_metrics=compute_metrics,
+    )
 
-# Make predictions
-print("Making predictions...")
-predictions = classifier.predict(X_test)
+    # Train model
+    trainer.train()
 
-# Print classification report
-print("\nClassification Report:")
-print(classification_report(
-    y_test,
-    predictions,
-    target_names=['1 star', '2 stars', '3 stars', '4 stars', '5 stars']
-))
+    # Save model
+    model.save_pretrained("data/07_models/roberta_model/review_classifier_model")
+    tokenizer.save_pretrained("data/07_models/roberta_model/review_classifier_model")
 
-# Function for single prediction
-def predict_single_review(text, classifier):
-    sentiment_scores = get_sentiment_scores(text)
-    rating = classifier.predict([sentiment_scores])[0]
-    proba = classifier.predict_proba([sentiment_scores])[0]
-    return rating, proba
+    # Evaluate on validation set
+    eval_results = trainer.evaluate()
+    print("\nValidation Results:")
+    print(eval_results)
 
-# Example usage
-example_text = "This product is amazing! Highly recommended!"
-predicted_rating, probabilities = predict_single_review(example_text, classifier)
-print(f"\nExample prediction:")
-print(f"Text: {example_text}")
-print(f"Predicted rating: {predicted_rating} stars")
-print("Rating probabilities:")
-for rating, prob in enumerate(probabilities, 1):
-    print(f"{rating} stars: {prob:.3f}")
-
-# Save the classifier
-joblib.dump(classifier, 'sentiment_classifier.joblib')
-
-# Analysis of classifier performance
-print("\nDetailed Analysis:")
-
-# Feature importance
-print("\nFeature Importance:")
-feature_names = ['Negative', 'Neutral', 'Positive']
-for i, feature in enumerate(feature_names):
-    importance = np.abs(classifier.coef_[:, i]).mean()
-    print(f"{feature}: {importance:.3f}")
-
-# Confusion analysis
-print("\nMost confident correct predictions:")
-for true_rating in range(1, 6):
-    mask = (y_test == true_rating)
-    if not any(mask):
-        continue
-    probs = classifier.predict_proba(X_test[mask])
-    confidences = np.max(probs, axis=1)
-    most_confident_idx = np.argmax(confidences)
-    most_confident_prob = confidences[most_confident_idx]
-    print(f"\nRating {true_rating}:")
-    print(f"Confidence: {most_confident_prob:.3f}")
-    print(f"Probabilities: {probs[most_confident_idx]}")
-
-# Save full results
-results_df = df.copy()
-all_predictions = classifier.predict(sentiment_features)
-results_df['predicted_rating'] = all_predictions
-results_df['prediction_correct'] = results_df['Score'] == results_df['predicted_rating']
-
-# Add prediction probabilities
-probabilities = classifier.predict_proba(sentiment_features)
-for i in range(5):
-    results_df[f'probability_{i+1}_star'] = probabilities[:, i]
-
-print("\nOverall accuracy:", (results_df['prediction_correct'].mean() * 100))
-
-# Save results
-results_df.to_csv('data/08_reporting/prediction_results.csv', index=False)
+if __name__ == "__main__":
+    main()
