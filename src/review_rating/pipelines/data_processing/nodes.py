@@ -6,7 +6,15 @@ from .dataset import ReviewDataset
 
 
 def split_data(df, parameters):
-    """Split data into training and test sets."""
+    """
+        Split data into training and test sets.
+        Args:
+            df: Pandas DataFrame
+            parameters: Pipeline parameters
+        Returns:
+            train_df: Pandas DataFrame
+            test_df: Pandas DataFrame
+    """
     df = df.head(5000) # To train on a subset of data for pipeline testing purposes
     mlflow.log_input(
         mlflow.data.pandas_dataset.from_pandas(df, source="raw_data"),
@@ -33,7 +41,15 @@ def split_data(df, parameters):
 
 
 def prepare_datasets(train_df, test_df):
-    """Prepare PyTorch datasets."""
+    """
+        Prepare PyTorch datasets.
+        Args:
+            train_df: Pandas DataFrame
+            test_df: Pandas DataFrame
+        Returns:
+            train_dataset: PyTorch dataset
+            test_dataset: PyTorch dataset
+    """
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
     train_dataset = ReviewDataset(

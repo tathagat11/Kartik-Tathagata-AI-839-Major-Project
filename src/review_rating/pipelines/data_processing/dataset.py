@@ -2,6 +2,14 @@ import torch
 from torch.utils.data import Dataset
 
 class ReviewDataset(Dataset):
+    """
+    PyTorch dataset for review data.
+    Args:
+        reviews: List of review text
+        scores: List of review scores
+        tokenizer: Tokenizer
+        max_length: Maximum length of input sequence
+    """
     def __init__(self, reviews, scores, tokenizer, max_length=512):
         self.tokenizer = tokenizer
         self.reviews = reviews

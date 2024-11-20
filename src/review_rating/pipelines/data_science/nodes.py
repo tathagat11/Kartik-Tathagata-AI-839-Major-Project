@@ -9,7 +9,7 @@ import torch
 from accelerate import Accelerator
 from sklearn.metrics import classification_report
 from transformers import RobertaForSequenceClassification, Trainer, TrainingArguments
-from weightwatcher import WeightWatcher
+# from weightwatcher import WeightWatcher
 
 matplotlib.use('Agg')
 
@@ -117,6 +117,11 @@ def train_model(train_dataset, test_dataset, params):
 def evaluate_model(model, test_dataset):
     """
     Evaluate the trained model on test dataset.
+    Args:
+        model: Trained model
+        test_dataset: PyTorch dataset for testing/validation
+    Returns:
+        classification report
     """
     logging.info("Starting model evaluation...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

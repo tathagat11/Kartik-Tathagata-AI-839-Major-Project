@@ -4,6 +4,13 @@ from .nodes import evaluate_model, train_model
 
 
 def create_pipeline(**kwargs):
+    """
+        Create the data science pipeline.
+        Args:
+            kwargs: Pipeline parameters
+        Returns:
+            Pipeline    
+    """
     return Pipeline(
         [
             node(

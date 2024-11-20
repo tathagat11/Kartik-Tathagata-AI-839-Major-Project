@@ -3,6 +3,13 @@ from kedro.pipeline import Pipeline, node
 from .nodes import split_data, prepare_datasets
 
 def create_pipeline(**kwargs) -> Pipeline:
+    """
+        Create the data processing pipeline.
+        Args:
+            kwargs: Pipeline parameters
+        Returns:
+            Pipeline
+    """
     return Pipeline(
         [
             node(
