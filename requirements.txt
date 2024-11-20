@@ -148,6 +148,7 @@ platformdirs                       4.3.6
 plotly                             5.24.1
 pluggy                             1.5.0
 ply                                3.11
+powerlaw                           1.5
 pre_commit_hooks                   5.0.0
 prometheus-client                  0.14.1
 prompt-toolkit                     3.0.43
@@ -233,6 +234,7 @@ wcwidth                            0.2.5
 webencodings                       0.5.1
 websocket-client                   1.8.0
 websockets                         14.0
+weightwatcher                      0.7.5.5
 Werkzeug                           3.1.3
 wheel                              0.44.0
 widgetsnbextension                 4.0.10
