@@ -4,12 +4,15 @@ from collections import OrderedDict
 import matplotlib
 import mlflow
 import numpy as np
-import sklearn
+from torch.utils.data import DataLoader
 import torch
 from accelerate import Accelerator
 from sklearn.metrics import classification_report
 from transformers import RobertaForSequenceClassification, Trainer, TrainingArguments
 # from weightwatcher import WeightWatcher
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 matplotlib.use('Agg')
 
@@ -27,106 +30,81 @@ def compute_metrics(pred):
 
 def train_model(train_dataset, test_dataset, params):
     """
-    Train the model with proper tracking and logging.
+    Train the model.
     Args:
         train_dataset: PyTorch dataset for training
-        test_dataset: PyTorch dataset for testing/validation
+        test_dataset: PyTorch dataset for validation
         params: Training parameters
     Returns:
-        trained model
+        Trained model
     """
-    # Clear GPU memory and log basic info
-    torch.cuda.empty_cache()
-    mlflow.log_param("train_size", len(train_dataset))
-    mlflow.log_param("test_size", len(test_dataset))
-    # Log class distribution
-    logging.info("Loading raw scores...")
-    raw_scores = [item["labels"].cpu().item() for item in train_dataset]
-    class_counts = np.bincount(raw_scores)
-    mlflow.log_param("class_distribution", dict(enumerate(class_counts.tolist())))
+    logger = logging.getLogger(__name__)
+    
+    with mlflow.start_run(nested=True) as run:
+        mlflow.log_params({
+            "train_size": len(train_dataset),
+            "test_size": len(test_dataset),
+            "class_distribution": dict(enumerate(np.bincount([item["labels"].item() for item in train_dataset]).tolist()))
+        })
 
-    # Initialize model and training
-    model = RobertaForSequenceClassification.from_pretrained(
-        "roberta-base",
-        num_labels=5, 
-        problem_type="single_label_classification"
-    )
-    training_args = TrainingArguments(**params)
-    accelerator = Accelerator()
-
-    trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=test_dataset,
-        compute_metrics=compute_metrics,
-    )
-    # Train model
-    logging.info("Starting training...")
-    trainer.train()
-    logging.info("Training completed")
-
-    # Prepare model for analysis
-    unwrapped_model = accelerator.unwrap_model(model).cpu()
-
-    # Analyze model weights
-    logging.info("Analyzing model weights...")
-    # watcher = WeightWatcher()
-    # watcher_results = watcher.analyze(
-    #     model=unwrapped_model,
-    #     plot=True,
-    #     savefig="data/08_reporting/weight_analysis",
-    #     vectors=True,
-    #     mp_fit=True,
-    # )
-
-    # Log model analysis results
-    # try:
-    #     mlflow.log_metrics({
-    #         "stable_rank": watcher_results["stable_rank"].mean(),
-    #         "condition_number": watcher_results["condition_number"].mean(),
-    #         "norm": watcher_results["norm"].mean(),
-    #     })
-    #     mlflow.log_dict(watcher_results.to_dict(), "weight_analysis.json")
-    # except Exception as e:
-    #     logging.warning(f"Warning: Weight analysis logging failed: {str(e)}")
-
-    # Save model and artifacts
-    logging.info("Saving model and artifacts...")
-    try:
-        mlflow.pytorch.log_model(
-            unwrapped_model,
-            "model",
-            registered_model_name="review_rating_model",
-            pip_requirements=[
-                "torch",
-                "transformers",
-                f"scikit-learn=={sklearn.__version__}",
-                "weightwatcher",  # Note: corrected from weightwatch
-            ],
-            code_paths=["src/review_rating/pipelines/data_science/nodes.py"],
-            input_example=next(iter(train_dataset)),
+        model = RobertaForSequenceClassification.from_pretrained(
+            "roberta-base",
+            num_labels=5,
+            problem_type="single_label_classification"
         )
-        mlflow.log_dict(unwrapped_model.config.to_dict(), "model_config.json")
-    except Exception as e:
-        logging.warning(f"Warning: Model saving failed: {str(e)}")
+        
+        accelerator = Accelerator()
+        model = accelerator.prepare(model)
+        
+        trainer = Trainer(
+            model=model,
+            args=TrainingArguments(**params),
+            train_dataset=train_dataset,
+            eval_dataset=test_dataset,
+            compute_metrics=compute_metrics,
+        )
+        
+        train_results = trainer.train()
+        mlflow.log_metrics({"train_loss": train_results.training_loss})
+        
+        logger.info("Saving model...")
+        try:
+            # Properly unwrap and prepare model for saving
+            unwrapped_model = accelerator.unwrap_model(model)
+            unwrapped_model = unwrapped_model.cpu()
 
-    return unwrapped_model
+            # Save the unwrapped model's state dict
+            state_dict = unwrapped_model.state_dict()
+            
+            # Create a fresh model instance for saving
+            clean_model = RobertaForSequenceClassification.from_pretrained(
+                "roberta-base",
+                num_labels=5,
+                problem_type="single_label_classification"
+            )
+            clean_model.load_state_dict(state_dict)
+            
+            mlflow.pytorch.log_model(
+                clean_model,
+                "model",
+                registered_model_name="review_rating_model",
+            )
+            
+            logger.info(f"Model URI: {mlflow.get_artifact_uri('model')}")
+            
+        except Exception as e:
+            logger.error(f"Model saving failed: {str(e)}", exc_info=True)
+            raise
+            
+        return clean_model
 
 
 def evaluate_model(model, test_dataset):
-    """
-    Evaluate the trained model on test dataset.
-    Args:
-        model: Trained model
-        test_dataset: PyTorch dataset for testing/validation
-    Returns:
-        classification report
-    """
-    logging.info("Starting model evaluation...")
+    logger = logging.getLogger(__name__)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # If model is a state dict, load it into a new model
-    if isinstance(model, dict) or isinstance(model, OrderedDict):
+    
+    # Load model if needed
+    if isinstance(model, (dict, OrderedDict)):
         eval_model = RobertaForSequenceClassification.from_pretrained(
             "roberta-base",
             num_labels=5,
@@ -136,36 +114,33 @@ def evaluate_model(model, test_dataset):
         model = eval_model
 
     model = model.to(device)
+    model.eval()
+    
+    # Batch evaluation for better performance
+    batch_size = 32
+    dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     predictions, true_labels = [], []
 
-    # Evaluate in batches
-    logging.info(f"Evaluating on {len(test_dataset)} samples...")
     with torch.no_grad():
-        for i in range(len(test_dataset)):
-            item = test_dataset[i]
-            outputs = model(
-                input_ids=item["input_ids"].unsqueeze(0).to(device),
-                attention_mask=item["attention_mask"].unsqueeze(0).to(device),
-            )
-            pred = outputs.logits.argmax(dim=-1).cpu().numpy()
-            predictions.extend(pred + 1)
-            true_labels.append(item["labels"].item() + 1)
+        for batch in dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            outputs = model(**batch)
+            preds = outputs.logits.argmax(dim=-1).cpu().numpy()
+            predictions.extend(preds + 1)
+            true_labels.extend(batch["labels"].cpu().numpy() + 1)
 
-    # Generate and log detailed evaluation metrics
-    logging.info("Generating evaluation report...")
     report = classification_report(true_labels, predictions)
-    mlflow.log_text(report, "classification_report.txt")
-
-    # Log detailed metrics
     metrics = classification_report(true_labels, predictions, output_dict=True)
+
+    # Log metrics
+    mlflow.log_text(report, "classification_report.txt")
     try:
         mlflow.log_metrics({
             f"{k}_f1-score": v["f1-score"]
-            for k, v in metrics.items()
+            for k, v in metrics.items() 
             if isinstance(v, dict)
         })
-        logging.info("Evaluation metrics logged successfully")
     except Exception as e:
-        logging.warning(f"Failed to log evaluation metrics: {str(e)}")
+        logger.error(f"Failed to log metrics: {str(e)}", exc_info=True)
 
     return report

@@ -26,13 +26,19 @@ tokenizer:
   filepath: data/03_primary/tokenizer.pkl
   backend: pickle
 
+# model:
+#   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+#   dataset:
+#     type: kedro_datasets_experimental.pytorch.PyTorchDataset
+#     filepath: data/06_models/model.pt
+#     save_args: {}
+#     load_args: {}
+
 model:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: kedro_datasets_experimental.pytorch.PyTorchDataset
     filepath: data/06_models/model.pt
-    save_args: {}
-    load_args: {}
 
 evaluation_report:
   type: text.TextDataset

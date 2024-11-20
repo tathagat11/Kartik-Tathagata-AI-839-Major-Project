@@ -1,5 +1,6 @@
 ##########################
 # KEDRO PROJECT
+deployment/app/data/**
 
 # ignore all local configuration
 conf/local/**
