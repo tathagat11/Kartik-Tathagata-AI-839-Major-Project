@@ -29,9 +29,10 @@ tokenizer:
 model:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
-    type: pickle.PickleDataset
-    filepath: data/06_models/model.pkl
-    backend: pickle
+    type: kedro_datasets_experimental.pytorch.PyTorchDataset
+    filepath: data/06_models/model.pt
+    save_args: {}
+    load_args: {}
 
 evaluation_report:
   type: text.TextDataset
