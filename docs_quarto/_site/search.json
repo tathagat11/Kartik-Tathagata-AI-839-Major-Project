@@ -1,0 +1,342 @@
+[
+  {
+    "objectID": "api/server.html",
+    "href": "api/server.html",
+    "title": "API Documentation",
+    "section": "",
+    "text": "The Review Rating API provides endpoints for predicting ratings from review texts using our trained RoBERTa model. The API supports both single and batch predictions.\n\n\n\n\n\n\n\nflowchart TD\n    A[Client] --&gt; B[\"/predict\"]\n    A --&gt; C[\"/batch-predict\"]\n    A --&gt; D[\"/health\"]\n    A --&gt; E[\"/logs\"]\n    B --&gt; F[RoBERTa Model]\n    C --&gt; F\n    F --&gt; G[Rating Prediction]\n\n\n\n\n\n\n\n\n\n\n\nEndpoint: /predict\nMethod: POST\nMakes a rating prediction for a single review text.\nRequest Body:\n{\n    \"text\": \"string\"\n}\nResponse:\n{\n    \"rating\": \"int (1-5)\",\n    \"confidence\": \"float (0-1)\"\n}\n\n\n\nEndpoint: /batch-predict\nMethod: POST\nMakes rating predictions for multiple reviews in a single request.\nRequest Body:\n{\n    \"data\": [\n        {\n            \"text\": \"string\"\n        }\n    ]\n}\nResponse:\n{\n    \"predictions\": [\n        {\n            \"rating\": \"int (1-5)\",\n            \"confidence\": \"float (0-1)\"\n        }\n    ]\n}\n\n\n\nEndpoint: /health\nMethod: GET\nChecks if the API and model are operational.\nResponse:\n{\n    \"status\": \"string\",\n    \"model_loaded\": \"boolean\"\n}\n\n\n\nEndpoint: /logs\nMethod: GET\nRetrieves filtered API usage logs.\nQuery Parameters: - limit: Number of log entries to return (default: 100) - level: Log level filter (optional) - start_date: Start date filter (YYYY-MM-DD, optional) - end_date: End date filter (YYYY-MM-DD, optional)\nResponse: List of log entries with timestamp, logger, level, and message.\n\n\n\n\n\n\n\n\nclass InputData(BaseModel):\n    text: str\n\n\n\nclass BatchInputData(BaseModel):\n    data: List[InputData]\n\n\n\n\n\n\nclass PredictionResponse(BaseModel):\n    rating: int        # Rating from 1 to 5\n    confidence: float  # Confidence score between 0 and 1\n\n\n\nclass BatchPredictionResponse(BaseModel):\n    predictions: List[PredictionResponse]\n\n\n\n\n\nThe API returns appropriate HTTP status codes:\n\n200: Successful request\n422: Invalid input format\n500: Server error (e.g., model prediction failure)\n\nError responses include a detail message explaining the error.\n\n\n\nThe API allows cross-origin requests with the following configuration: - All origins allowed (\"*\") - All methods allowed - All headers allowed - Credentials supported\n\n\n\nThe API logs all requests and errors to model_usage.log with the following format:\ntimestamp - logger_name - log_level - message\n\n\n\nThe complete OpenAPI specification for this API can be found below:",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#overview",
+    "href": "api/server.html#overview",
+    "title": "API Documentation",
+    "section": "",
+    "text": "flowchart TD\n    A[Client] --&gt; B[\"/predict\"]\n    A --&gt; C[\"/batch-predict\"]\n    A --&gt; D[\"/health\"]\n    A --&gt; E[\"/logs\"]\n    B --&gt; F[RoBERTa Model]\n    C --&gt; F\n    F --&gt; G[Rating Prediction]",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#api-endpoints",
+    "href": "api/server.html#api-endpoints",
+    "title": "API Documentation",
+    "section": "",
+    "text": "Endpoint: /predict\nMethod: POST\nMakes a rating prediction for a single review text.\nRequest Body:\n{\n    \"text\": \"string\"\n}\nResponse:\n{\n    \"rating\": \"int (1-5)\",\n    \"confidence\": \"float (0-1)\"\n}\n\n\n\nEndpoint: /batch-predict\nMethod: POST\nMakes rating predictions for multiple reviews in a single request.\nRequest Body:\n{\n    \"data\": [\n        {\n            \"text\": \"string\"\n        }\n    ]\n}\nResponse:\n{\n    \"predictions\": [\n        {\n            \"rating\": \"int (1-5)\",\n            \"confidence\": \"float (0-1)\"\n        }\n    ]\n}\n\n\n\nEndpoint: /health\nMethod: GET\nChecks if the API and model are operational.\nResponse:\n{\n    \"status\": \"string\",\n    \"model_loaded\": \"boolean\"\n}\n\n\n\nEndpoint: /logs\nMethod: GET\nRetrieves filtered API usage logs.\nQuery Parameters: - limit: Number of log entries to return (default: 100) - level: Log level filter (optional) - start_date: Start date filter (YYYY-MM-DD, optional) - end_date: End date filter (YYYY-MM-DD, optional)\nResponse: List of log entries with timestamp, logger, level, and message.",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#data-models",
+    "href": "api/server.html#data-models",
+    "title": "API Documentation",
+    "section": "",
+    "text": "class InputData(BaseModel):\n    text: str\n\n\n\nclass BatchInputData(BaseModel):\n    data: List[InputData]\n\n\n\n\n\n\nclass PredictionResponse(BaseModel):\n    rating: int        # Rating from 1 to 5\n    confidence: float  # Confidence score between 0 and 1\n\n\n\nclass BatchPredictionResponse(BaseModel):\n    predictions: List[PredictionResponse]",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#error-handling",
+    "href": "api/server.html#error-handling",
+    "title": "API Documentation",
+    "section": "",
+    "text": "The API returns appropriate HTTP status codes:\n\n200: Successful request\n422: Invalid input format\n500: Server error (e.g., model prediction failure)\n\nError responses include a detail message explaining the error.",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#cors-configuration",
+    "href": "api/server.html#cors-configuration",
+    "title": "API Documentation",
+    "section": "",
+    "text": "The API allows cross-origin requests with the following configuration: - All origins allowed (\"*\") - All methods allowed - All headers allowed - Credentials supported",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#logging",
+    "href": "api/server.html#logging",
+    "title": "API Documentation",
+    "section": "",
+    "text": "The API logs all requests and errors to model_usage.log with the following format:\ntimestamp - logger_name - log_level - message",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "api/server.html#openapi-specification",
+    "href": "api/server.html#openapi-specification",
+    "title": "API Documentation",
+    "section": "",
+    "text": "The complete OpenAPI specification for this API can be found below:",
+    "crumbs": [
+      "API",
+      "Server Documentation"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_processing.html",
+    "href": "pipelines/data_processing.html",
+    "title": "Data Processing Pipeline",
+    "section": "",
+    "text": "This pipeline handles the preprocessing of review data for training a RoBERTa-based classification model. It includes data splitting and dataset preparation with MLflow tracking.",
+    "crumbs": [
+      "Pipelines",
+      "Data Processing"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_processing.html#pipeline-structure",
+    "href": "pipelines/data_processing.html#pipeline-structure",
+    "title": "Data Processing Pipeline",
+    "section": "Pipeline Structure",
+    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[reviews] --&gt; B[split_data_node]\n    P[params:train_test_split] --&gt; B\n    B --&gt; C[train_data]\n    B --&gt; D[test_data]\n    C --&gt; E[prepare_datasets_node]\n    D --&gt; E\n    E --&gt; F[train_dataset]\n    E --&gt; G[test_dataset]\n    E --&gt; H[tokenizer]",
+    "crumbs": [
+      "Pipelines",
+      "Data Processing"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_processing.html#components",
+    "href": "pipelines/data_processing.html#components",
+    "title": "Data Processing Pipeline",
+    "section": "Components",
+    "text": "Components\n\nNodes\n\nsplit_data_node\nFunction: split_data\nDescription: Splits input data into training and test sets while maintaining class distribution. Currently uses a subset of 5000 samples for testing purposes.\nInputs: - reviews: Raw reviews DataFrame - params:train_test_split: Parameters containing: - test_size: Fraction of data for testing - random_state: Random seed for reproducibility\nOutputs: - train_data: Training DataFrame - test_data: Test DataFrame\nMLflow Tracking: - Logs raw data, training data, and test data as MLflow inputs\n\n\nprepare_datasets_node\nFunction: prepare_datasets\nDescription: Creates PyTorch datasets from the split DataFrames using RoBERTa tokenizer.\nInputs: - train_data: Training DataFrame - test_data: Test DataFrame\nOutputs: - train_dataset: PyTorch training dataset - test_dataset: PyTorch test dataset - tokenizer: RoBERTa tokenizer instance\n\n\n\nDataset Class\n\nReviewDataset\nA PyTorch Dataset class for review data.\nParameters: - reviews: List of review text - scores: List of review scores - tokenizer: Tokenizer - max_length: Maximum length of input sequence (default: 512)\nOutput Format:\n{\n    'input_ids': tensor([...]),        # Tokenized text\n    'attention_mask': tensor([...]),   # Attention mask\n    'labels': tensor(score)            # Zero-based score (0-4)\n}",
+    "crumbs": [
+      "Pipelines",
+      "Data Processing"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html",
+    "href": "cards/project_card.html",
+    "title": "Project Card",
+    "section": "",
+    "text": "Financial institutions face significant challenges in assessing credit risk for loan applications. Traditional credit scoring methods often miss nuanced patterns and can be biased against certain demographic groups. This leads to both missed opportunities for good borrowers being denied and increased risk from bad loans being approved. In today’s competitive banking environment, institutions need more sophisticated ways to evaluate credit applications while maintaining regulatory compliance and fairness.\n\n\n\nBanks need to accurately assess the creditworthiness of loan applicants to minimize default risk while maximizing approved loans to qualified borrowers. Currently, credit officers spend significant time manually reviewing applications and may make inconsistent decisions based on limited information. This results in both lost revenue from good applications being rejected and losses from bad loans being approved.\n\n\n\nPrimary customers are:\n\nCredit risk officers at medium to large retail banks\nLoan application processing teams\nBanking compliance officers responsible for fair lending practices\nFinancial institutions serving diverse demographic populations\n\n\n\n\n\nReduce loan default rates through more accurate risk assessment\nIncrease loan approval rates for qualified borrowers\nReduce application processing time\nImprove consistency and fairness in lending decisions\nEnable regulatory compliance through transparent decision-making\n\n\n\n\nCredit officers will receive a streamlined workflow where they: 1. Input standard loan application data into a familiar interface 2. Receive an immediate risk assessment score with key contributing factors 3. View detailed explanations of risk factors in an intuitive dashboard 4. Override recommendations with documented justification when needed 5. Generate standardized reports for audit and compliance purposes\n\n\n\n\nDeploy MVP risk assessment system to pilot branch by Q4 2024\nAchieve 90% user adoption among credit officers within 6 months of launch\nDemonstrate statistical fairness across demographic groups within the next quarter after launch\nObtain regulatory approval by mid 2025\n\n\n\n\n\nData Privacy & Security\n\nHandling sensitive financial and personal information\nEnsuring compliance with data protection regulations\nSecuring data transfer between systems\n\nUser Adoption\n\nResistance from experienced credit officers\nTraining requirements for new system\nIntegration with existing workflows\n\nRegulatory Compliance\n\nMeeting fair lending requirements\nProviding required transparency in decisions\nMaintaining audit trails",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#background",
+    "href": "cards/project_card.html#background",
+    "title": "Project Card",
+    "section": "",
+    "text": "Financial institutions face significant challenges in assessing credit risk for loan applications. Traditional credit scoring methods often miss nuanced patterns and can be biased against certain demographic groups. This leads to both missed opportunities for good borrowers being denied and increased risk from bad loans being approved. In today’s competitive banking environment, institutions need more sophisticated ways to evaluate credit applications while maintaining regulatory compliance and fairness.",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#problem",
+    "href": "cards/project_card.html#problem",
+    "title": "Project Card",
+    "section": "",
+    "text": "Banks need to accurately assess the creditworthiness of loan applicants to minimize default risk while maximizing approved loans to qualified borrowers. Currently, credit officers spend significant time manually reviewing applications and may make inconsistent decisions based on limited information. This results in both lost revenue from good applications being rejected and losses from bad loans being approved.",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#customer",
+    "href": "cards/project_card.html#customer",
+    "title": "Project Card",
+    "section": "",
+    "text": "Primary customers are:\n\nCredit risk officers at medium to large retail banks\nLoan application processing teams\nBanking compliance officers responsible for fair lending practices\nFinancial institutions serving diverse demographic populations",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#value-proposition",
+    "href": "cards/project_card.html#value-proposition",
+    "title": "Project Card",
+    "section": "",
+    "text": "Reduce loan default rates through more accurate risk assessment\nIncrease loan approval rates for qualified borrowers\nReduce application processing time\nImprove consistency and fairness in lending decisions\nEnable regulatory compliance through transparent decision-making",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#product",
+    "href": "cards/project_card.html#product",
+    "title": "Project Card",
+    "section": "",
+    "text": "Credit officers will receive a streamlined workflow where they: 1. Input standard loan application data into a familiar interface 2. Receive an immediate risk assessment score with key contributing factors 3. View detailed explanations of risk factors in an intuitive dashboard 4. Override recommendations with documented justification when needed 5. Generate standardized reports for audit and compliance purposes",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#objectives",
+    "href": "cards/project_card.html#objectives",
+    "title": "Project Card",
+    "section": "",
+    "text": "Deploy MVP risk assessment system to pilot branch by Q4 2024\nAchieve 90% user adoption among credit officers within 6 months of launch\nDemonstrate statistical fairness across demographic groups within the next quarter after launch\nObtain regulatory approval by mid 2025",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#risks-challenges",
+    "href": "cards/project_card.html#risks-challenges",
+    "title": "Project Card",
+    "section": "",
+    "text": "Data Privacy & Security\n\nHandling sensitive financial and personal information\nEnsuring compliance with data protection regulations\nSecuring data transfer between systems\n\nUser Adoption\n\nResistance from experienced credit officers\nTraining requirements for new system\nIntegration with existing workflows\n\nRegulatory Compliance\n\nMeeting fair lending requirements\nProviding required transparency in decisions\nMaintaining audit trails",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#task",
+    "href": "cards/project_card.html#task",
+    "title": "Project Card",
+    "section": "Task",
+    "text": "Task\nThis is a binary classification problem predicting credit risk based on the provided dataset (dataset_id_96.csv). According to the code and data samples, we need to predict ‘y’ (True/False) indicating whether a loan application represents a good or bad credit risk.",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#metrics",
+    "href": "cards/project_card.html#metrics",
+    "title": "Project Card",
+    "section": "Metrics",
+    "text": "Metrics\n\nPrimary: F1 score (currently being tracked in evaluate_model function)\nSupporting metrics:\n\nAccuracy\nPrecision\nRecall\nTarget drift score (monitored via Evidently)",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#evaluation",
+    "href": "cards/project_card.html#evaluation",
+    "title": "Project Card",
+    "section": "Evaluation",
+    "text": "Evaluation\nBased on the provided pipeline code, evaluation happens through: 1. Train/test split with configurable test size 2. Target drift detection between training and test sets using Evidently 3. Model performance tracking via MLflow 4. Production monitoring through FastAPI logging 5. Regular retraining evaluation",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#data",
+    "href": "cards/project_card.html#data",
+    "title": "Project Card",
+    "section": "Data",
+    "text": "Data\n\nPrimary dataset: dataset_id_96.csv\nFeatures include:\n\nCredit history attributes (checking_status, credit_history, etc.)\nPersonal information (age, employment, etc.)\nLoan details (duration, credit_amount, etc.)\nGenerated features (X_1 through X_10)\n\nData Pipeline:\n\nRaw data ingestion via Kedro\nData quality checks\nPreprocessing including scaling and encoding\nFeature engineering\nTrain/test splitting",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#planroadmap",
+    "href": "cards/project_card.html#planroadmap",
+    "title": "Project Card",
+    "section": "Plan/Roadmap",
+    "text": "Plan/Roadmap\n\nPhase 1 - Initial Development\n\nEnhance current data pipeline\nImplement additional data quality checks\nDevelop model monitoring dashboard\nComplete initial model training\n\nPhase 2 - Pilot\n\nDeploy to pilot branch\nGather user feedback\nRefine model based on real usage\nImplement A/B testing framework\n\nPhase 3 - Scale\n\nRoll out to additional branches\nImplement automated retraining pipeline\nEnhance monitoring and alerting\nDevelop fallback procedures",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#continuous-improvement",
+    "href": "cards/project_card.html#continuous-improvement",
+    "title": "Project Card",
+    "section": "Continuous Improvement",
+    "text": "Continuous Improvement\n\nAutomated monitoring via:\n\nMLflow experiment tracking\nFastAPI request logging\nEvidently drift detection\n\nRegular Updates:\n\nModel retraining based on drift detection\nFeature importance analysis\nPerformance metric tracking\nUser feedback incorporation",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "cards/project_card.html#resources",
+    "href": "cards/project_card.html#resources",
+    "title": "Project Card",
+    "section": "Resources",
+    "text": "Resources\n\nHuman Resources\n\nData Science Team:\n\n1 ML Engineers (model development)\n1 Data Engineer (pipeline maintenance)\n1 MLOps Engineer (deployment/monitoring)\n\nProduct Team:\n\n1 Product Manager\n1 UX Designer\n1 Full-stack Developers\n\nDomain Experts:\n\n1 Credit Risk Officer\n1 Compliance Officer\n\n\n\n\nCompute Resources\n\nDevelopment:\n\nKedro pipeline execution environment\nMLflow tracking server\nDevelopment databases\n\nProduction:\n\nFastAPI server for model serving\nModel artifact storage\nMonitoring infrastructure\nLoad balancing for high availability\nBackup and disaster recovery systems\n\nStorage:\n\nSecure data warehouse for sensitive information\nModel registry\nLog storage\nBackup storage",
+    "crumbs": [
+      "Cards",
+      "Project Card"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "Welcome to the documentation for the Review Rating Model project. This documentation provides comprehensive information about the project’s pipelines, API, and various documentation cards.\n\n\n\n\nThe project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics\n\n\n\n\n\nTo get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
+  },
+  {
+    "objectID": "index.html#key-components",
+    "href": "index.html#key-components",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "The project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics"
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "To get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
+  },
+  {
+    "objectID": "pipelines/data_science.html",
+    "href": "pipelines/data_science.html",
+    "title": "Data Science Pipeline",
+    "section": "",
+    "text": "This pipeline handles the training and evaluation of the RoBERTa-based review rating model. It includes model training with MLflow tracking and comprehensive evaluation metrics.",
+    "crumbs": [
+      "Pipelines",
+      "Data Science"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_science.html#pipeline-structure",
+    "href": "pipelines/data_science.html#pipeline-structure",
+    "title": "Data Science Pipeline",
+    "section": "Pipeline Structure",
+    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[train_dataset] --&gt; B[train_model_node]\n    D[params:model_params] --&gt; B\n    B --&gt; E[model]\n    E --&gt; F[evaluate_model_node]\n    C[test_dataset] --&gt; F\n    F --&gt; G[evaluation_report]",
+    "crumbs": [
+      "Pipelines",
+      "Data Science"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_science.html#components",
+    "href": "pipelines/data_science.html#components",
+    "title": "Data Science Pipeline",
+    "section": "Components",
+    "text": "Components\n\nNodes\n\ntrain_model_node\nFunction: train_model\nDescription: Trains a RoBERTa model for review classification using Hugging Face’s Transformers library.\nInputs: - train_dataset: Training PyTorch dataset - test_dataset: Test PyTorch dataset - params:model_params: Training parameters\nOutputs: - model: Trained PyTorch model\nMLflow Tracking: - Training dataset size - Class distribution - Training loss - Model artifacts\n\n\nevaluate_model_node\nFunction: evaluate_model\nDescription: Evaluates the trained model on the test dataset using batched prediction.\nInputs: - model: Trained model - test_dataset: Test PyTorch dataset\nOutputs: - evaluation_report: Classification report with performance metrics\nMLflow Tracking: - Detailed classification report - F1-scores for each class",
+    "crumbs": [
+      "Pipelines",
+      "Data Science"
+    ]
+  }
+]

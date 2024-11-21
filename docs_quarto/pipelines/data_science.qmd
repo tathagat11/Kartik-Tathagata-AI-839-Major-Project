@@ -1,0 +1,58 @@
+---
+title: "Data Science Pipeline"
+---
+
+This pipeline handles the training and evaluation of the RoBERTa-based review rating model. It includes model training with MLflow tracking and comprehensive evaluation metrics.
+
+## Pipeline Structure
+
+```{mermaid}
+flowchart LR
+    A[train_dataset] --> B[train_model_node]
+    D[params:model_params] --> B
+    B --> E[model]
+    E --> F[evaluate_model_node]
+    C[test_dataset] --> F
+    F --> G[evaluation_report]
+```
+
+## Components
+
+### Nodes
+
+#### `train_model_node`
+
+**Function**: `train_model`
+
+**Description**: Trains a RoBERTa model for review classification using Hugging Face's Transformers library.
+
+**Inputs**:
+- `train_dataset`: Training PyTorch dataset
+- `test_dataset`: Test PyTorch dataset
+- `params:model_params`: Training parameters
+
+**Outputs**:
+- `model`: Trained PyTorch model
+
+**MLflow Tracking**:
+- Training dataset size
+- Class distribution
+- Training loss
+- Model artifacts
+
+#### `evaluate_model_node`
+
+**Function**: `evaluate_model`
+
+**Description**: Evaluates the trained model on the test dataset using batched prediction.
+
+**Inputs**:
+- `model`: Trained model
+- `test_dataset`: Test PyTorch dataset
+
+**Outputs**:
+- `evaluation_report`: Classification report with performance metrics
+
+**MLflow Tracking**:
+- Detailed classification report
+- F1-scores for each class

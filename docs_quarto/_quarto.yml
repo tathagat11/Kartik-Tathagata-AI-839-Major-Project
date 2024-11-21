@@ -1,0 +1,51 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+  - "api/_assets/openapi.json"
+
+website:
+  title: "Review Rating Project Documentation"
+  sidebar:
+    style: "docked"
+    search: true
+    tools:
+      - icon: github
+        href: https://github.com/tathagat11/Kartik-Tathagata-AI-839-Major-Project
+    contents:
+      - section: "Pipelines"
+        contents:
+          - text: "Data Processing"
+            file: pipelines/data_processing.qmd
+          - text: "Data Science"
+            file: pipelines/data_science.qmd
+      - section: "API"
+        contents:
+          - text: "Server Documentation"
+            file: api/server.qmd
+      - section: "Cards"
+        contents:
+          - text: "Project Card"
+            file: cards/project_card.ipynb
+          - text: "Data Card"
+            file: cards/data_card.ipynb
+          - text: "Model Card"
+            file: cards/model_card.ipynb
+
+format:
+  html:
+    theme:
+      -r4ds
+      -custom.scss
+    linkcolor: "#464a46"
+    code-fold: true
+    toc: true
+    anchor-sections: true
+    fig-cap-location: margin
+    reference-location: margin
+    footnotes-hover: true
+    highlight-style: github
+    mermaid:
+      theme: neutral
+
+

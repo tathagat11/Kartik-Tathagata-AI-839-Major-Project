@@ -29,11 +29,19 @@ from pyspark.sql import SparkSession
 class MLflowModelDeploymentHook:
     @hook_impl
     def after_pipeline_run(self):
+        """
+            Runs after all pipelines finish running and deploys the latest model to a Docker container
+            Args:
+                None
+            Returns:
+                None
+        """
         try:
             # Get latest model version
             client = mlflow.tracking.MlflowClient()
             latest_version = client.get_latest_versions("review_rating_model", stages=["None"])[0]
-            
+            latest_version = client.get_model_version("review_rating_model", 9)
+
             # Get model path
             artifact_uri = latest_version.source
             local_path = artifact_uri.replace("file://", "")

@@ -1,0 +1,184 @@
+---
+title: "API Documentation"
+---
+
+# Review Rating API
+
+The Review Rating API provides endpoints for predicting ratings from review texts using our trained RoBERTa model. The API supports both single and batch predictions.
+
+## Overview
+
+```{mermaid}
+flowchart TD
+    A[Client] --> B["/predict"]
+    A --> C["/batch-predict"]
+    A --> D["/health"]
+    A --> E["/logs"]
+    B --> F[RoBERTa Model]
+    C --> F
+    F --> G[Rating Prediction]
+```
+
+## API Endpoints
+
+### Single Prediction
+
+**Endpoint**: `/predict`  
+**Method**: POST
+
+Makes a rating prediction for a single review text.
+
+**Request Body**:
+```json
+{
+    "text": "string"
+}
+```
+
+**Response**:
+```json
+{
+    "rating": "int (1-5)",
+    "confidence": "float (0-1)"
+}
+```
+
+### Batch Prediction
+
+**Endpoint**: `/batch-predict`  
+**Method**: POST
+
+Makes rating predictions for multiple reviews in a single request.
+
+**Request Body**:
+```json
+{
+    "data": [
+        {
+            "text": "string"
+        }
+    ]
+}
+```
+
+**Response**:
+```json
+{
+    "predictions": [
+        {
+            "rating": "int (1-5)",
+            "confidence": "float (0-1)"
+        }
+    ]
+}
+```
+
+### Health Check
+
+**Endpoint**: `/health`  
+**Method**: GET
+
+Checks if the API and model are operational.
+
+**Response**:
+```json
+{
+    "status": "string",
+    "model_loaded": "boolean"
+}
+```
+
+### Logs
+
+**Endpoint**: `/logs`  
+**Method**: GET
+
+Retrieves filtered API usage logs.
+
+**Query Parameters**:
+- `limit`: Number of log entries to return (default: 100)
+- `level`: Log level filter (optional)
+- `start_date`: Start date filter (YYYY-MM-DD, optional)
+- `end_date`: End date filter (YYYY-MM-DD, optional)
+
+**Response**: List of log entries with timestamp, logger, level, and message.
+
+## Data Models
+
+### Input Models
+
+#### InputData
+```python
+class InputData(BaseModel):
+    text: str
+```
+
+#### BatchInputData
+```python
+class BatchInputData(BaseModel):
+    data: List[InputData]
+```
+
+### Response Models
+
+#### PredictionResponse
+```python
+class PredictionResponse(BaseModel):
+    rating: int        # Rating from 1 to 5
+    confidence: float  # Confidence score between 0 and 1
+```
+
+#### BatchPredictionResponse
+```python
+class BatchPredictionResponse(BaseModel):
+    predictions: List[PredictionResponse]
+```
+
+## Error Handling
+
+The API returns appropriate HTTP status codes:
+
+- `200`: Successful request
+- `422`: Invalid input format
+- `500`: Server error (e.g., model prediction failure)
+
+Error responses include a detail message explaining the error.
+
+## CORS Configuration
+
+The API allows cross-origin requests with the following configuration:
+- All origins allowed (`"*"`)
+- All methods allowed
+- All headers allowed
+- Credentials supported
+
+## Logging
+
+The API logs all requests and errors to `model_usage.log` with the following format:
+```
+timestamp - logger_name - log_level - message
+```
+
+## OpenAPI Specification
+
+The complete OpenAPI specification for this API can be found below:
+
+```{=html}
+<div id="swagger-ui"></div>
+
+<script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css"/>
+
+<script>
+window.onload = function() {
+    SwaggerUIBundle({
+        url: "_assets/openapi.json",
+        dom_id: '#swagger-ui',
+        presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+    });
+}
+</script>
+```

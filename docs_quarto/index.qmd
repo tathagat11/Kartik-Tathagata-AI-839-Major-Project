@@ -1,0 +1,52 @@
+---
+title: "Review Rating Model Documentation"
+---
+
+# Project Overview
+
+Welcome to the documentation for the Review Rating Model project. This documentation provides comprehensive information about the project's pipelines, API, and various documentation cards.
+
+## Key Components
+
+### Pipelines
+
+The project consists of two main pipelines:
+
+1. [**Data Processing Pipeline**](pipelines/data_processing.qmd)
+   - Handles data splitting and preparation
+   - Uses RoBERTa tokenizer for text processing
+
+2. [**Data Science Pipeline**](pipelines/data_science.qmd)
+   - Trains RoBERTa-based classification model
+   - Performs model evaluation
+
+### [Deployment API Documentation](api/server.qmd)
+
+The model is served through a FastAPI application that provides:
+
+- Real-time prediction endpoints
+- Batch prediction capabilities
+- Logging and monitoring features
+
+### Documentation Cards
+
+The project maintains three types of documentation cards:
+
+1. [**Project Card**](cards/project_card.ipynb): Overall project information and metadata
+2. [**Data Card**](cards/data_card.ipynb): Dataset characteristics and quality metrics
+3. [**Model Card**](cards/model_card.ipynb): Model specifications and performance metrics
+
+## Getting Started
+
+To get started with the documentation:
+
+1. Browse through the pipeline documentation to understand the data flow
+2. Check the API documentation for integration details
+3. Review the cards for detailed specifications about different aspects of the project
+
+- **Framework**: Kedro
+- **Model**: RoBERTa (Hugging Face Transformers)
+- **Experiment Tracking**: MLflow
+- **API**: FastAPI
+- **Deployment**: Docker
+- **Documentation**: Quarto

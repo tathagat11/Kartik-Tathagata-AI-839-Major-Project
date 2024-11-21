@@ -9,6 +9,7 @@ import torch
 from accelerate import Accelerator
 from sklearn.metrics import classification_report
 from transformers import RobertaForSequenceClassification, Trainer, TrainingArguments
+from tqdm.auto import tqdm
 # from weightwatcher import WeightWatcher
 
 logging.basicConfig(level=logging.INFO)
@@ -40,66 +41,74 @@ def train_model(train_dataset, test_dataset, params):
     """
     logger = logging.getLogger(__name__)
     
-    with mlflow.start_run(nested=True) as run:
-        mlflow.log_params({
+    
+    mlflow.log_params({
             "train_size": len(train_dataset),
             "test_size": len(test_dataset),
             "class_distribution": dict(enumerate(np.bincount([item["labels"].item() for item in train_dataset]).tolist()))
-        })
+    })
 
-        model = RobertaForSequenceClassification.from_pretrained(
+    model = RobertaForSequenceClassification.from_pretrained(
+        "roberta-base",
+        num_labels=5,
+        problem_type="single_label_classification"
+    )
+        
+    accelerator = Accelerator()
+    model = accelerator.prepare(model)
+        
+    trainer = Trainer(
+        model=model,
+        args=TrainingArguments(**params),
+        train_dataset=train_dataset,
+        eval_dataset=test_dataset,
+        compute_metrics=compute_metrics,
+    )
+        
+    train_results = trainer.train()
+    mlflow.log_metrics({"train_loss": train_results.training_loss})
+        
+    logger.info("Saving model...")
+    try:
+        # Properly unwrap and prepare model for saving
+        unwrapped_model = accelerator.unwrap_model(model)
+        unwrapped_model = unwrapped_model.cpu()
+
+        # Save the unwrapped model's state dict
+        state_dict = unwrapped_model.state_dict()
+            
+        # Create a fresh model instance for saving
+        clean_model = RobertaForSequenceClassification.from_pretrained(
             "roberta-base",
             num_labels=5,
             problem_type="single_label_classification"
         )
-        
-        accelerator = Accelerator()
-        model = accelerator.prepare(model)
-        
-        trainer = Trainer(
-            model=model,
-            args=TrainingArguments(**params),
-            train_dataset=train_dataset,
-            eval_dataset=test_dataset,
-            compute_metrics=compute_metrics,
+        clean_model.load_state_dict(state_dict)
+            
+        mlflow.pytorch.log_model(
+            clean_model,
+            "model",
+            registered_model_name="review_rating_model",
         )
-        
-        train_results = trainer.train()
-        mlflow.log_metrics({"train_loss": train_results.training_loss})
-        
-        logger.info("Saving model...")
-        try:
-            # Properly unwrap and prepare model for saving
-            unwrapped_model = accelerator.unwrap_model(model)
-            unwrapped_model = unwrapped_model.cpu()
-
-            # Save the unwrapped model's state dict
-            state_dict = unwrapped_model.state_dict()
             
-            # Create a fresh model instance for saving
-            clean_model = RobertaForSequenceClassification.from_pretrained(
-                "roberta-base",
-                num_labels=5,
-                problem_type="single_label_classification"
-            )
-            clean_model.load_state_dict(state_dict)
+        logger.info(f"Model URI: {mlflow.get_artifact_uri('model')}")
             
-            mlflow.pytorch.log_model(
-                clean_model,
-                "model",
-                registered_model_name="review_rating_model",
-            )
+    except Exception as e:
+        logger.error(f"Model saving failed: {str(e)}", exc_info=True)
+        raise
             
-            logger.info(f"Model URI: {mlflow.get_artifact_uri('model')}")
-            
-        except Exception as e:
-            logger.error(f"Model saving failed: {str(e)}", exc_info=True)
-            raise
-            
-        return clean_model
+    return clean_model
 
 
 def evaluate_model(model, test_dataset):
+    """
+    Evaluate the model.
+    Args:
+        model: Trained model
+        test_dataset: PyTorch dataset for evaluation
+    Returns:
+        classification report
+    """
     logger = logging.getLogger(__name__)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
@@ -117,12 +126,12 @@ def evaluate_model(model, test_dataset):
     model.eval()
     
     # Batch evaluation for better performance
-    batch_size = 32
-    dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    batch_size = 128
+    dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
     predictions, true_labels = [], []
 
     with torch.no_grad():
-        for batch in dataloader:
+        for batch in tqdm(dataloader, desc="Evaluating"):
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
             preds = outputs.logits.argmax(dim=-1).cpu().numpy()
