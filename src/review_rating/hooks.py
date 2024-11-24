@@ -1,30 +1,23 @@
 import subprocess
 import mlflow
 import os
+import sys
+import pytest
+
 from kedro.framework.hooks import hook_impl
-from pyspark import SparkConf
-from pyspark.sql import SparkSession
 
-
-# class SparkHooks:
-#     @hook_impl
-#     def after_context_created(self, context) -> None:
-#         """Initialises a SparkSession using the config
-#         defined in project's conf folder.
-#         """
-
-#         # Load the spark configuration in spark.yaml using the config loader
-#         parameters = context.config_loader["spark"]
-#         spark_conf = SparkConf().setAll(parameters.items())
-
-#         # Initialise the spark session
-#         spark_session_conf = (
-#             SparkSession.builder.appName(context.project_path.name)
-#             .enableHiveSupport()
-#             .config(conf=spark_conf)
-#         )
-#         _spark_session = spark_session_conf.getOrCreate()
-#         _spark_session.sparkContext.setLogLevel("WARN")
+class TestingHook:
+    @hook_impl
+    def before_pipeline_run(self):
+        print("Running tests before pipeline execution...")
+        # Run pytest and capture the result
+        result = pytest.main(['tests/', '-v'])
+        
+        if result != pytest.ExitCode.OK:
+            print("Tests failed! Pipeline execution stopped.")
+            sys.exit(1)
+        
+        print("All tests passed. Continuing with pipeline execution...")
 
 class MLflowModelDeploymentHook:
     @hook_impl

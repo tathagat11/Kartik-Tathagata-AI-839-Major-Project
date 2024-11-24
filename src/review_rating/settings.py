@@ -4,10 +4,10 @@ https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 
 # Instantiated project hooks.
 # from review_rating.hooks import SparkHooks  # noqa: E402
-from review_rating.hooks import MLflowModelDeploymentHook
+from review_rating.hooks import MLflowModelDeploymentHook, TestingHook
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
-HOOKS = (MLflowModelDeploymentHook(),)
+HOOKS = (TestingHook(), MLflowModelDeploymentHook())
 
 # Installed plugins for which to disable hook auto-registration.
 # DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)

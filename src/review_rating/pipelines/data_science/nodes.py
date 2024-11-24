@@ -132,11 +132,15 @@ def evaluate_model(model, test_dataset):
 
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Evaluating"):
-            batch = {k: v.to(device) for k, v in batch.items()}
+            batch = {k: v.to(device, non_blocking=True) for k, v in batch.items()}
             outputs = model(**batch)
-            preds = outputs.logits.argmax(dim=-1).cpu().numpy()
-            predictions.extend(preds + 1)
-            true_labels.extend(batch["labels"].cpu().numpy() + 1)
+            preds = outputs.logits.argmax(dim=-1)
+            predictions.append(preds.cpu())
+            true_labels.append(batch["labels"].cpu())
+
+    predictions = torch.cat(predictions).numpy() + 1
+    true_labels = torch.cat(true_labels).numpy() + 1
+
 
     report = classification_report(true_labels, predictions)
     metrics = classification_report(true_labels, predictions, output_dict=True)
