@@ -33,6 +33,8 @@ website:
             file: cards/data_card.ipynb
           - text: "Model Card"
             file: cards/model_card.ipynb
+      - text: "Data Quality Report"
+        file: data_quality/data_quality_report2.qmd
 
 format:
   html:
