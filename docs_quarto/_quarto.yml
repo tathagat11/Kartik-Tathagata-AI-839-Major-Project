@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: _site
   resources:
-  - "api/_assets/openapi.json"
+  - "api/_assets"
 
 website:
   title: "Review Rating Project Documentation"
@@ -34,7 +34,7 @@ website:
           - text: "Model Card"
             file: cards/model_card.ipynb
       - text: "Data Quality Report"
-        file: data_quality/data_quality_report2.qmd
+        file: data_quality/data_quality_report.qmd
 
 format:
   html:
