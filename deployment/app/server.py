@@ -1,5 +1,7 @@
 import json
 import logging
+import uuid
+import time
 from datetime import datetime
 from typing import Dict, List, Optional, Union
 
@@ -88,18 +90,60 @@ def process_text(text: str) -> PredictionResponse:
         logger.error(f"Error processing text: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Add structured logging
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(input_data: InputData):
     """Endpoint for single prediction"""
-    logger.info("Received single prediction request")
-    return process_text(input_data.text)
+    request_id = str(uuid.uuid4())
+    start_time = time.time()
+    
+    try:
+        prediction = process_text(input_data.text)
+        duration = time.time() - start_time
+        
+        logger.info("Prediction completed", extra={
+            'request_id': request_id,
+            'text_length': len(input_data.text),
+            'duration_ms': round(duration * 1000, 2),
+            'prediction': prediction.rating,
+            'confidence': prediction.confidence
+        })
+        return prediction
+        
+    except Exception as e:
+        logger.error("Prediction failed", extra={
+            'request_id': request_id,
+            'error': str(e)
+        })
+        raise
 
 @app.post("/batch-predict", response_model=BatchPredictionResponse)
 async def batch_predict(input_data: BatchInputData):
     """Endpoint for batch predictions"""
-    logger.info(f"Received batch prediction request with {len(input_data.data)} items")
-    predictions = [process_text(item.text) for item in input_data.data]
-    return BatchPredictionResponse(predictions=predictions)
+    request_id = str(uuid.uuid4())
+    start_time = time.time()
+    batch_size = len(input_data.data)
+    
+    try:
+        predictions = [process_text(item.text) for item in input_data.data]
+        duration = time.time() - start_time
+        
+        logger.info("Batch prediction completed", extra={
+            'request_id': request_id,
+            'batch_size': batch_size,
+            'avg_duration_ms': round((duration * 1000) / batch_size, 2),
+            'inputs': [item.text[:100] + '...' if len(item.text) > 100 else item.text for item in input_data.data],
+            'predictions': [{'rating': p.rating, 'confidence': p.confidence} for p in predictions],
+        })
+        return BatchPredictionResponse(predictions=predictions)
+        
+    except Exception as e:
+        logger.error("Batch prediction failed", extra={
+            'request_id': request_id,
+            'batch_size': batch_size,
+            'error': str(e)
+        })
+        raise
 
 @app.get("/health")
 async def health_check():
