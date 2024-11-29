@@ -88,36 +88,167 @@
     ]
   },
   {
-    "objectID": "pipelines/data_processing.html",
-    "href": "pipelines/data_processing.html",
-    "title": "Data Processing Pipeline",
+    "objectID": "pipelines/data_science.html",
+    "href": "pipelines/data_science.html",
+    "title": "Data Science Pipeline",
     "section": "",
-    "text": "This pipeline handles the preprocessing of review data for training a RoBERTa-based classification model. It includes data splitting and dataset preparation with MLflow tracking.",
+    "text": "This pipeline handles the training and evaluation of the RoBERTa-based review rating model. It includes model training with MLflow tracking and comprehensive evaluation metrics.",
     "crumbs": [
       "Pipelines",
-      "Data Processing"
+      "Data Science"
     ]
   },
   {
-    "objectID": "pipelines/data_processing.html#pipeline-structure",
-    "href": "pipelines/data_processing.html#pipeline-structure",
-    "title": "Data Processing Pipeline",
+    "objectID": "pipelines/data_science.html#pipeline-structure",
+    "href": "pipelines/data_science.html#pipeline-structure",
+    "title": "Data Science Pipeline",
     "section": "Pipeline Structure",
-    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[reviews] --&gt; B[split_data_node]\n    P[params:train_test_split] --&gt; B\n    B --&gt; C[train_data]\n    B --&gt; D[test_data]\n    C --&gt; E[prepare_datasets_node]\n    D --&gt; E\n    E --&gt; F[train_dataset]\n    E --&gt; G[test_dataset]\n    E --&gt; H[tokenizer]",
+    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[train_dataset] --&gt; B[train_model_node]\n    D[params:model_params] --&gt; B\n    B --&gt; E[model]\n    E --&gt; F[evaluate_model_node]\n    C[test_dataset] --&gt; F\n    F --&gt; G[evaluation_report]",
     "crumbs": [
       "Pipelines",
-      "Data Processing"
+      "Data Science"
     ]
   },
   {
-    "objectID": "pipelines/data_processing.html#components",
-    "href": "pipelines/data_processing.html#components",
-    "title": "Data Processing Pipeline",
+    "objectID": "pipelines/data_science.html#components",
+    "href": "pipelines/data_science.html#components",
+    "title": "Data Science Pipeline",
     "section": "Components",
-    "text": "Components\n\nNodes\n\nsplit_data_node\nFunction: split_data\nDescription: Splits input data into training and test sets while maintaining class distribution. Currently uses a subset of 5000 samples for testing purposes.\nInputs: - reviews: Raw reviews DataFrame - params:train_test_split: Parameters containing: - test_size: Fraction of data for testing - random_state: Random seed for reproducibility\nOutputs: - train_data: Training DataFrame - test_data: Test DataFrame\nMLflow Tracking: - Logs raw data, training data, and test data as MLflow inputs\n\n\nprepare_datasets_node\nFunction: prepare_datasets\nDescription: Creates PyTorch datasets from the split DataFrames using RoBERTa tokenizer.\nInputs: - train_data: Training DataFrame - test_data: Test DataFrame\nOutputs: - train_dataset: PyTorch training dataset - test_dataset: PyTorch test dataset - tokenizer: RoBERTa tokenizer instance\n\n\n\nDataset Class\n\nReviewDataset\nA PyTorch Dataset class for review data.\nParameters: - reviews: List of review text - scores: List of review scores - tokenizer: Tokenizer - max_length: Maximum length of input sequence (default: 512)\nOutput Format:\n{\n    'input_ids': tensor([...]),        # Tokenized text\n    'attention_mask': tensor([...]),   # Attention mask\n    'labels': tensor(score)            # Zero-based score (0-4)\n}",
+    "text": "Components\n\nNodes\n\ntrain_model_node\nFunction: train_model\nDescription: Trains a RoBERTa model for review classification using Hugging Face’s Transformers library.\nInputs: - train_dataset: Training PyTorch dataset - test_dataset: Test PyTorch dataset - params:model_params: Training parameters\nOutputs: - model: Trained PyTorch model\nMLflow Tracking: - Training dataset size - Class distribution - Training loss - Model artifacts\n\n\nevaluate_model_node\nFunction: evaluate_model\nDescription: Evaluates the trained model on the test dataset using batched prediction.\nInputs: - model: Trained model - test_dataset: Test PyTorch dataset\nOutputs: - evaluation_report: Classification report with performance metrics\nMLflow Tracking: - Detailed classification report - F1-scores for each class",
     "crumbs": [
       "Pipelines",
-      "Data Processing"
+      "Data Science"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "Welcome to the documentation for the Review Rating Model project. This documentation provides comprehensive information about the project’s pipelines, API, and various documentation cards.\n\n\n\n\nThe project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics\n\n\n\n\n\nTo get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
+  },
+  {
+    "objectID": "index.html#key-components",
+    "href": "index.html#key-components",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "The project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics"
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "Review Rating Model Documentation",
+    "section": "",
+    "text": "To get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
+  },
+  {
+    "objectID": "cards/model_card.html",
+    "href": "cards/model_card.html",
+    "title": "Model Card",
+    "section": "",
+    "text": "This model card provides information about the Review Rating Prediction model, which predicts product review ratings on a scale of 1-5 stars based on review text.\n\n\nCode\nimport os\nimport mlflow\nimport pandas as pd\nimport numpy as np\nfrom datetime import datetime\nimport plotly.express as px\nimport plotly.graph_objects as go\nimport json\nimport plotly.io as pio\npio.renderers.default = \"notebook\"\n\n# Set MLflow tracking URI\nroot_dir = os.path.dirname(os.path.dirname(os.getcwd()))\nmlflow.set_tracking_uri(os.path.join(root_dir, 'mlruns'))\n\n# Helper functions for MLflow dataset handling\ndef get_dataset_by_context(inputs, context):\n    \"\"\"Get dataset information by context tag\"\"\"\n    for input_data in inputs:\n        for tag in input_data.tags:\n            if tag.key == 'mlflow.data.context' and tag.value == context:\n                return input_data.dataset\n    return None\n\ndef get_schema_info(dataset):\n    \"\"\"Extract schema information from dataset\"\"\"\n    if dataset and dataset.schema:\n        schema_dict = json.loads(dataset.schema)\n        return schema_dict.get('mlflow_colspec', [])\n    return []\n\ndef get_row_count(dataset):\n    \"\"\"Get number of rows from dataset profile\"\"\"\n    if dataset and dataset.profile:\n        profile_dict = json.loads(dataset.profile)\n        return profile_dict.get('num_rows', 0)\n    return 0\n\n# Get model and run information\nMODEL_NAME = \"review_rating_model\"\nclient = mlflow.tracking.MlflowClient()\n# latest_version = client.get_latest_versions(MODEL_NAME, stages=[\"None\"])[0]\nlatest_version = client.get_model_version(\"review_rating_model\", 9)\nrun = mlflow.get_run(latest_version.run_id)\n\n\n# Get dataset information\nvalidation_data = get_dataset_by_context(run.inputs.dataset_inputs, 'validation')\ntraining_data = get_dataset_by_context(run.inputs.dataset_inputs, 'training')\nraw_data = get_dataset_by_context(run.inputs.dataset_inputs, 'raw_data')\n\n# Display basic model info\nprint(f\"Model Version: {latest_version.version}\")\nprint(f\"Last Updated: {datetime.fromtimestamp(run.info.start_time/1000).strftime('%Y-%m-%d %H:%M:%S')}\")\n\n\nModel Version: 9\nLast Updated: 2024-11-21 00:58:51",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-description",
+    "href": "cards/model_card.html#model-description",
+    "title": "Model Card",
+    "section": "",
+    "text": "This model card provides information about the Review Rating Prediction model, which predicts product review ratings on a scale of 1-5 stars based on review text.\n\n\nCode\nimport os\nimport mlflow\nimport pandas as pd\nimport numpy as np\nfrom datetime import datetime\nimport plotly.express as px\nimport plotly.graph_objects as go\nimport json\nimport plotly.io as pio\npio.renderers.default = \"notebook\"\n\n# Set MLflow tracking URI\nroot_dir = os.path.dirname(os.path.dirname(os.getcwd()))\nmlflow.set_tracking_uri(os.path.join(root_dir, 'mlruns'))\n\n# Helper functions for MLflow dataset handling\ndef get_dataset_by_context(inputs, context):\n    \"\"\"Get dataset information by context tag\"\"\"\n    for input_data in inputs:\n        for tag in input_data.tags:\n            if tag.key == 'mlflow.data.context' and tag.value == context:\n                return input_data.dataset\n    return None\n\ndef get_schema_info(dataset):\n    \"\"\"Extract schema information from dataset\"\"\"\n    if dataset and dataset.schema:\n        schema_dict = json.loads(dataset.schema)\n        return schema_dict.get('mlflow_colspec', [])\n    return []\n\ndef get_row_count(dataset):\n    \"\"\"Get number of rows from dataset profile\"\"\"\n    if dataset and dataset.profile:\n        profile_dict = json.loads(dataset.profile)\n        return profile_dict.get('num_rows', 0)\n    return 0\n\n# Get model and run information\nMODEL_NAME = \"review_rating_model\"\nclient = mlflow.tracking.MlflowClient()\n# latest_version = client.get_latest_versions(MODEL_NAME, stages=[\"None\"])[0]\nlatest_version = client.get_model_version(\"review_rating_model\", 9)\nrun = mlflow.get_run(latest_version.run_id)\n\n\n# Get dataset information\nvalidation_data = get_dataset_by_context(run.inputs.dataset_inputs, 'validation')\ntraining_data = get_dataset_by_context(run.inputs.dataset_inputs, 'training')\nraw_data = get_dataset_by_context(run.inputs.dataset_inputs, 'raw_data')\n\n# Display basic model info\nprint(f\"Model Version: {latest_version.version}\")\nprint(f\"Last Updated: {datetime.fromtimestamp(run.info.start_time/1000).strftime('%Y-%m-%d %H:%M:%S')}\")\n\n\nModel Version: 9\nLast Updated: 2024-11-21 00:58:51",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-architecture",
+    "href": "cards/model_card.html#model-architecture",
+    "title": "Model Card",
+    "section": "Model Architecture",
+    "text": "Model Architecture\n\nType: RoBERTa-based Sequence Classification\nBase Model: RoBERTa Base\nTask: 5-class classification for review rating prediction\nOutput: Rating prediction (1-5 stars)",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#dataset-overview",
+    "href": "cards/model_card.html#dataset-overview",
+    "title": "Model Card",
+    "section": "Dataset Overview",
+    "text": "Dataset Overview\n\n\nCode\n# Display dataset statistics\nprint(\"Dataset Statistics:\")\n# print(f\"Training samples: {get_row_count(training_data):,}\")\n# print(f\"Validation samples: {get_row_count(validation_data):,}\")\n# print(f\"Raw data samples: {get_row_count(raw_data):,}\")\n\nprint(f\"Training samples: {454764:,}\")\nprint(f\"Validation samples: {113690:,}\")\nprint(f\"Raw data samples: {568454:,}\")\n\n# Display schema information\nif raw_data:\n    print(\"\\nFeature Information:\")\n    for col in get_schema_info(raw_data):\n        print(f\"- {col['name']} ({col['type']})\")\n\n\nDataset Statistics:\nTraining samples: 454,764\nValidation samples: 113,690\nRaw data samples: 568,454",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-performance",
+    "href": "cards/model_card.html#model-performance",
+    "title": "Model Card",
+    "section": "Model Performance",
+    "text": "Model Performance\n\n\nCode\n# Get histories for loss metrics\nmetrics_to_plot = ['train_loss', 'eval_loss', 'learning_rate', 'grad_norm']\nhistories = {\n    metric: client.get_metric_history(run.info.run_id, metric)\n    for metric in metrics_to_plot\n}\n\n# Create two subplots\nfig = go.Figure()\n\n# Add traces for losses\nfinal_metrics = run.data.metrics\n\n# Create evaluation loss plot\nfig = go.Figure()\nfig.add_trace(go.Scatter(\n    x=steps,\n    y=values,\n    name='Evaluation Loss',\n    mode='lines+markers'\n))\n\nfig.update_layout(\n    title='Evaluation Loss During Training',\n    xaxis_title='Step',\n    yaxis_title='Loss',\n    hovermode='x unified'\n)\nfig.show()\n\n# Display final metrics\nfinal_metrics = run.data.metrics\nprint(\"\\nFinal Metrics:\")\nprint(f\"Training Loss: {final_metrics.get('train_loss', 'N/A'):.4f}\")\nprint(f\"Evaluation Loss: {final_metrics.get('eval_loss', 'N/A'):.4f}\")\nprint(f\"Training Runtime: {final_metrics.get('train_runtime', 'N/A'):.2f}s\")\nprint(f\"Samples/second: {final_metrics.get('train_samples_per_second', 'N/A'):.2f}\")\n\n\n                                                \n\n\n\nFinal Metrics:\nTraining Loss: 0.6280\nEvaluation Loss: 0.5381\nTraining Runtime: 23582.44s\nSamples/second: 3.39",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#training-configuration",
+    "href": "cards/model_card.html#training-configuration",
+    "title": "Model Card",
+    "section": "Training Configuration",
+    "text": "Training Configuration\n\n\nCode\nparams = run.data.params\nfinal_metrics = run.data.metrics\n\ntraining_params = {\n    'Epochs': params.get('num_train_epochs', 'N/A'),\n    'Train Batch Size': params.get('per_device_train_batch_size', 'N/A'),\n    'Eval Batch Size': params.get('per_device_eval_batch_size', 'N/A'),\n    'Learning Rate': params.get('learning_rate', 'N/A'),\n    'Weight Decay': params.get('weight_decay', 'N/A'),\n    'Warmup Ratio': params.get('warmup_ratio', 'N/A'),\n    'Gradient Accumulation': params.get('gradient_accumulation_steps', 'N/A'),\n    'Max Gradient Norm': params.get('max_grad_norm', 'N/A'),\n    'Max Steps': params.get('max_steps', 'N/A'),\n    'FP16': params.get('fp16', 'N/A'),\n    'Eval Strategy': params.get('evaluation_strategy', 'N/A'),\n    'Eval Steps': params.get('eval_steps', 'N/A'),\n    'Save Steps': params.get('save_steps', 'N/A'),\n    'Dataloader Workers': params.get('dataloader_num_workers', 'N/A')\n}\n\nprint(\"Training Configuration:\")\nfor param, value in training_params.items():\n    print(f\"{param}: {value}\")\n\n\nTraining Configuration:\nEpochs: 1\nTrain Batch Size: 16\nEval Batch Size: 16\nLearning Rate: 2e-05\nWeight Decay: 0.01\nWarmup Ratio: 0.1\nGradient Accumulation: 2\nMax Gradient Norm: 1.0\nMax Steps: 2500\nFP16: True\nEval Strategy: steps\nEval Steps: 100\nSave Steps: 100\nDataloader Workers: 2",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-usage-guidelines",
+    "href": "cards/model_card.html#model-usage-guidelines",
+    "title": "Model Card",
+    "section": "Model Usage Guidelines",
+    "text": "Model Usage Guidelines\n\nIntended Uses\n\nAutomated prediction of product review ratings\nBulk processing of historical reviews\nQuality control for review submissions\n\n\n\nOut-of-Scope Uses\n\nSentiment analysis of non-product-related text\nAnalysis of non-English reviews\nReal-time/streaming predictions",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#limitations-and-biases",
+    "href": "cards/model_card.html#limitations-and-biases",
+    "title": "Model Card",
+    "section": "Limitations and Biases",
+    "text": "Limitations and Biases\n\nTechnical Limitations\n\nMaximum sequence length: 512 tokens\nEnglish-language only\nLimited to product review domain\nBatch processing only (not optimized for real-time)\n\n\n\nKnown Biases\n\nTraining data class imbalance (see distribution plot)\nDomain-specific vocabulary\nMay perform differently across product categories",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-maintenance",
+    "href": "cards/model_card.html#model-maintenance",
+    "title": "Model Card",
+    "section": "Model Maintenance",
+    "text": "Model Maintenance\n\nMonitoring Requirements\n\nData drift in review patterns\nPerformance across rating classes\nClass distribution changes\nCoverage of product categories\n\n\n\nRetraining Triggers\n\nPerformance below 0.8 F1-score per class\nSignificant data drift detected\nMajor changes in review patterns\n6-month deployment period",
+    "crumbs": [
+      "Cards",
+      "Model Card"
+    ]
+  },
+  {
+    "objectID": "cards/model_card.html#model-artifacts-and-governance",
+    "href": "cards/model_card.html#model-artifacts-and-governance",
+    "title": "Model Card",
+    "section": "Model Artifacts and Governance",
+    "text": "Model Artifacts and Governance\n\n\nCode\nprint(\"Model Information:\")\nprint(f\"Model Location: {latest_version.source}\")\nprint(f\"Run ID: {run.info.run_id}\")\nprint(f\"Artifact URI: {run.info.artifact_uri}\")\n\n\nModel Information:\nModel Location: file:///home/tathagat/workspace/projects/MLPE/tathagata-ai-839/review-rating/mlruns/863057453145536184/27e869ed62a3496fa284da0d956ee9e6/artifacts/model\nRun ID: 27e869ed62a3496fa284da0d956ee9e6\nArtifact URI: file:///home/tathagat/workspace/projects/MLPE/tathagata-ai-839/review-rating/mlruns/863057453145536184/27e869ed62a3496fa284da0d956ee9e6/artifacts",
+    "crumbs": [
+      "Cards",
+      "Model Card"
     ]
   },
   {
@@ -286,57 +417,69 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Review Rating Model Documentation",
+    "objectID": "pipelines/data_processing.html",
+    "href": "pipelines/data_processing.html",
+    "title": "Data Processing Pipeline",
     "section": "",
-    "text": "Welcome to the documentation for the Review Rating Model project. This documentation provides comprehensive information about the project’s pipelines, API, and various documentation cards.\n\n\n\n\nThe project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics\n\n\n\n\n\nTo get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
-  },
-  {
-    "objectID": "index.html#key-components",
-    "href": "index.html#key-components",
-    "title": "Review Rating Model Documentation",
-    "section": "",
-    "text": "The project consists of two main pipelines:\n\nData Processing Pipeline\n\nHandles data splitting and preparation\nUses RoBERTa tokenizer for text processing\n\nData Science Pipeline\n\nTrains RoBERTa-based classification model\nPerforms model evaluation\n\n\n\n\n\nThe model is served through a FastAPI application that provides:\n\nReal-time prediction endpoints\nBatch prediction capabilities\nLogging and monitoring features\n\n\n\n\nThe project maintains three types of documentation cards:\n\nProject Card: Overall project information and metadata\nData Card: Dataset characteristics and quality metrics\nModel Card: Model specifications and performance metrics"
-  },
-  {
-    "objectID": "index.html#getting-started",
-    "href": "index.html#getting-started",
-    "title": "Review Rating Model Documentation",
-    "section": "",
-    "text": "To get started with the documentation:\n\nBrowse through the pipeline documentation to understand the data flow\nCheck the API documentation for integration details\nReview the cards for detailed specifications about different aspects of the project\n\n\nFramework: Kedro\nModel: RoBERTa (Hugging Face Transformers)\nExperiment Tracking: MLflow\nAPI: FastAPI\nDeployment: Docker\nDocumentation: Quarto"
-  },
-  {
-    "objectID": "pipelines/data_science.html",
-    "href": "pipelines/data_science.html",
-    "title": "Data Science Pipeline",
-    "section": "",
-    "text": "This pipeline handles the training and evaluation of the RoBERTa-based review rating model. It includes model training with MLflow tracking and comprehensive evaluation metrics.",
+    "text": "This pipeline handles the preprocessing of review data for training a RoBERTa-based classification model. It includes data splitting and dataset preparation with MLflow tracking.",
     "crumbs": [
       "Pipelines",
-      "Data Science"
+      "Data Processing"
     ]
   },
   {
-    "objectID": "pipelines/data_science.html#pipeline-structure",
-    "href": "pipelines/data_science.html#pipeline-structure",
-    "title": "Data Science Pipeline",
+    "objectID": "pipelines/data_processing.html#pipeline-structure",
+    "href": "pipelines/data_processing.html#pipeline-structure",
+    "title": "Data Processing Pipeline",
     "section": "Pipeline Structure",
-    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[train_dataset] --&gt; B[train_model_node]\n    D[params:model_params] --&gt; B\n    B --&gt; E[model]\n    E --&gt; F[evaluate_model_node]\n    C[test_dataset] --&gt; F\n    F --&gt; G[evaluation_report]",
+    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[reviews] --&gt; B[split_data_node]\n    P[params:train_test_split] --&gt; B\n    B --&gt; C[train_data]\n    B --&gt; D[test_data]\n    C --&gt; E[prepare_datasets_node]\n    D --&gt; E\n    E --&gt; F[train_dataset]\n    E --&gt; G[test_dataset]\n    E --&gt; H[tokenizer]",
     "crumbs": [
       "Pipelines",
-      "Data Science"
+      "Data Processing"
     ]
   },
   {
-    "objectID": "pipelines/data_science.html#components",
-    "href": "pipelines/data_science.html#components",
-    "title": "Data Science Pipeline",
+    "objectID": "pipelines/data_processing.html#components",
+    "href": "pipelines/data_processing.html#components",
+    "title": "Data Processing Pipeline",
     "section": "Components",
-    "text": "Components\n\nNodes\n\ntrain_model_node\nFunction: train_model\nDescription: Trains a RoBERTa model for review classification using Hugging Face’s Transformers library.\nInputs: - train_dataset: Training PyTorch dataset - test_dataset: Test PyTorch dataset - params:model_params: Training parameters\nOutputs: - model: Trained PyTorch model\nMLflow Tracking: - Training dataset size - Class distribution - Training loss - Model artifacts\n\n\nevaluate_model_node\nFunction: evaluate_model\nDescription: Evaluates the trained model on the test dataset using batched prediction.\nInputs: - model: Trained model - test_dataset: Test PyTorch dataset\nOutputs: - evaluation_report: Classification report with performance metrics\nMLflow Tracking: - Detailed classification report - F1-scores for each class",
+    "text": "Components\n\nNodes\n\nsplit_data_node\nFunction: split_data\nDescription: Splits input data into training and test sets while maintaining class distribution. Currently uses a subset of 5000 samples for testing purposes.\nInputs: - reviews: Raw reviews DataFrame - params:train_test_split: Parameters containing: - test_size: Fraction of data for testing - random_state: Random seed for reproducibility\nOutputs: - train_data: Training DataFrame - test_data: Test DataFrame\nMLflow Tracking: - Logs raw data, training data, and test data as MLflow inputs\n\n\nprepare_datasets_node\nFunction: prepare_datasets\nDescription: Creates PyTorch datasets from the split DataFrames using RoBERTa tokenizer.\nInputs: - train_data: Training DataFrame - test_data: Test DataFrame\nOutputs: - train_dataset: PyTorch training dataset - test_dataset: PyTorch test dataset - tokenizer: RoBERTa tokenizer instance\n\n\n\nDataset Class\n\nReviewDataset\nA PyTorch Dataset class for review data.\nParameters: - reviews: List of review text - scores: List of review scores - tokenizer: Tokenizer - max_length: Maximum length of input sequence (default: 512)\nOutput Format:\n{\n    'input_ids': tensor([...]),        # Tokenized text\n    'attention_mask': tensor([...]),   # Attention mask\n    'labels': tensor(score)            # Zero-based score (0-4)\n}",
     "crumbs": [
       "Pipelines",
-      "Data Science"
+      "Data Processing"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_monitoring.html",
+    "href": "pipelines/data_monitoring.html",
+    "title": "Data Monitoring Pipeline",
+    "section": "",
+    "text": "This pipeline implements data validation and drift detection for the review classification system. It uses the Evidently framework to monitor data quality and detect potential data distribution changes.",
+    "crumbs": [
+      "Pipelines",
+      "Data Monitoring"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_monitoring.html#pipeline-structure",
+    "href": "pipelines/data_monitoring.html#pipeline-structure",
+    "title": "Data Monitoring Pipeline",
+    "section": "Pipeline Structure",
+    "text": "Pipeline Structure\n\n\n\n\n\nflowchart LR\n    A[reference_data] --&gt; B[run_data_validation_node]\n    C[current_data] --&gt; B\n    P[params:monitoring] --&gt; B\n    B --&gt; D[test_results]\n    B --&gt; E[html_report]",
+    "crumbs": [
+      "Pipelines",
+      "Data Monitoring"
+    ]
+  },
+  {
+    "objectID": "pipelines/data_monitoring.html#components",
+    "href": "pipelines/data_monitoring.html#components",
+    "title": "Data Monitoring Pipeline",
+    "section": "Components",
+    "text": "Components\n\nNodes\n\nrun_data_validation_node\nFunction: run_data_validation\nDescription: Runs a comprehensive suite of data validation tests comparing reference data with current data. Generates both programmatic test results and a human-readable HTML report.\nInputs: - reference_data: Reference DataFrame (baseline) - current_data: Current DataFrame to validate - params:monitoring: Parameters containing: - drift: Drift detection settings - cat_stattest: Statistical test for categorical variables - cat_stattest_threshold: P-value threshold for drift detection - drift_share: Maximum allowed share of drifted features\nOutputs: - test_results: Dictionary containing detailed test results - HTML report saved to data/09_monitoring/test_results.html\nTest Suite Components:\n\nMissing Values Test\n\nMonitors the share of missing values in the “Text” column\nFlags significant changes in missing value patterns\n\nData Structure Tests\n\nTestNumberOfConstantColumns: Detects columns with constant values\nTestNumberOfDuplicatedColumns: Identifies duplicate columns\nTestNumberOfDuplicatedRows: Monitors for duplicate records\n\nData Drift Detection\n\nMonitors distribution changes in the “Score” column\nUses statistical testing with configurable thresholds\nReports both individual feature drift and overall dataset drift\n\n\n\n\n\nError Handling and Logging\nThe pipeline implements comprehensive error handling and logging:\n\nDetailed Test Results: Each test’s status, parameters, and description are logged\nContext-Aware Failures: Failed tests include specific recommendations for remediation\nHTML Reports: Generated for each validation run with visualizations\nStructured Error Messages: Failures include:\n\nTest name and status\nTest parameters and thresholds\nDescriptive context\nRecommended actions\n\n\n\n\nUsage Example\n# Pipeline parameters example\nmonitoring_params = {\n    \"drift\": {\n        \"cat_stattest\": \"chi2\",\n        \"cat_stattest_threshold\": 0.05,\n        \"drift_share\": 0.3\n    }\n}\n\n# Running the pipeline\ntest_results = run_data_validation(\n    reference_data=reference_df,\n    current_data=current_df,\n    monitoring_params=monitoring_params\n)\n\n\nFailure Scenarios\nThe pipeline will raise a ValueError with detailed context when: - Data quality tests fail (e.g., unexpected duplicates) - Column structure changes are detected - Significant data drift is identified beyond thresholds",
+    "crumbs": [
+      "Pipelines",
+      "Data Monitoring"
     ]
   }
 ]

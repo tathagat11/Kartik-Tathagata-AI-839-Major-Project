@@ -1,0 +1,95 @@
+---
+title: "Data Monitoring Pipeline"
+---
+
+This pipeline implements data validation and drift detection for the review classification system. It uses the Evidently framework to monitor data quality and detect potential data distribution changes.
+
+## Pipeline Structure
+
+```{mermaid}
+flowchart LR
+    A[reference_data] --> B[run_data_validation_node]
+    C[current_data] --> B
+    P[params:monitoring] --> B
+    B --> D[test_results]
+    B --> E[html_report]
+```
+
+## Components
+
+### Nodes
+
+#### run_data_validation_node
+
+**Function**: `run_data_validation`
+
+**Description**: Runs a comprehensive suite of data validation tests comparing reference data with current data. Generates both programmatic test results and a human-readable HTML report.
+
+**Inputs**:
+- `reference_data`: Reference DataFrame (baseline)
+- `current_data`: Current DataFrame to validate
+- `params:monitoring`: Parameters containing:
+  - `drift`: Drift detection settings
+    - `cat_stattest`: Statistical test for categorical variables
+    - `cat_stattest_threshold`: P-value threshold for drift detection
+    - `drift_share`: Maximum allowed share of drifted features
+
+**Outputs**:
+- `test_results`: Dictionary containing detailed test results
+- HTML report saved to `data/09_monitoring/test_results.html`
+
+**Test Suite Components**:
+
+1. **Missing Values Test**
+   - Monitors the share of missing values in the "Text" column
+   - Flags significant changes in missing value patterns
+
+2. **Data Structure Tests**
+   - `TestNumberOfConstantColumns`: Detects columns with constant values
+   - `TestNumberOfDuplicatedColumns`: Identifies duplicate columns
+   - `TestNumberOfDuplicatedRows`: Monitors for duplicate records
+
+3. **Data Drift Detection**
+   - Monitors distribution changes in the "Score" column
+   - Uses statistical testing with configurable thresholds
+   - Reports both individual feature drift and overall dataset drift
+
+### Error Handling and Logging
+
+The pipeline implements comprehensive error handling and logging:
+
+- **Detailed Test Results**: Each test's status, parameters, and description are logged
+- **Context-Aware Failures**: Failed tests include specific recommendations for remediation
+- **HTML Reports**: Generated for each validation run with visualizations
+- **Structured Error Messages**: Failures include:
+  - Test name and status
+  - Test parameters and thresholds
+  - Descriptive context
+  - Recommended actions
+
+### Usage Example
+
+```python
+# Pipeline parameters example
+monitoring_params = {
+    "drift": {
+        "cat_stattest": "chi2",
+        "cat_stattest_threshold": 0.05,
+        "drift_share": 0.3
+    }
+}
+
+# Running the pipeline
+test_results = run_data_validation(
+    reference_data=reference_df,
+    current_data=current_df,
+    monitoring_params=monitoring_params
+)
+```
+
+### Failure Scenarios
+
+The pipeline will raise a `ValueError` with detailed context when:
+- Data quality tests fail (e.g., unexpected duplicates)
+- Column structure changes are detected
+- Significant data drift is identified beyond thresholds

@@ -19,6 +19,8 @@ website:
             file: pipelines/data_processing.qmd
           - text: "Data Science"
             file: pipelines/data_science.qmd
+          - text: "Data Monitoring"
+            file: pipelines/data_monitoring.qmd
       - section: "API"
         contents:
           - text: "Server Documentation"
