@@ -233,7 +233,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../cards/project_card.html">Cards</a></li><li class="breadcrumb-item"><a href="../cards/project_card.html">Project Card</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Project Card</h1>
-<p class="subtitle lead">Fine-Tuning RoBERTa LLM with Amazon Fine Food Reviews</p>
+<p class="subtitle lead">Product Review Rating Prediction System</p>
 </div>
 
 
@@ -266,110 +266,107 @@ ul.task-list li input[type="checkbox"] {
 <h1>Business View</h1>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>Financial institutions face significant challenges in assessing credit risk for loan applications. Traditional credit scoring methods often miss nuanced patterns and can be biased against certain demographic groups. This leads to both missed opportunities for good borrowers being denied and increased risk from bad loans being approved. In today’s competitive banking environment, institutions need more sophisticated ways to evaluate credit applications while maintaining regulatory compliance and fairness.</p>
+<p>The volume of user-generated content in the form of product reviews is a valuable source of customer sentiment and preferences. These reviews, when quantified into ratings, can provide significant insights for businesses, helping improve their products and services. By leveraging natural language processing, specifically sentiment analysis, businesses can automate the interpretation of vast amounts of textual feedback into structured ratings.</p>
 </section>
 <section id="problem" class="level2">
 <h2 class="anchored" data-anchor-id="problem">Problem</h2>
-<p>Banks need to accurately assess the creditworthiness of loan applicants to minimize default risk while maximizing approved loans to qualified borrowers. Currently, credit officers spend significant time manually reviewing applications and may make inconsistent decisions based on limited information. This results in both lost revenue from good applications being rejected and losses from bad loans being approved.</p>
+<p>While textual reviews provide detailed insights, manually interpreting them is time-consuming and subject to bias. An automated system that predicts numerical ratings based on review text can provide a more objective and scalable method for understanding customer satisfaction and expectations.</p>
 </section>
 <section id="customer" class="level2">
 <h2 class="anchored" data-anchor-id="customer">Customer</h2>
-<p>Primary customers are:</p>
+<p>The primary customers for this project are:</p>
 <ul>
-<li>Credit risk officers at medium to large retail banks</li>
-<li>Loan application processing teams</li>
-<li>Banking compliance officers responsible for fair lending practices</li>
-<li>Financial institutions serving diverse demographic populations</li>
+<li>E-commerce platforms that aggregate customer reviews</li>
+<li>Marketing and product development teams interested in customer feedback analysis</li>
+<li>Consumer insight analysts focusing on sentiment analysis</li>
+<li>Companies requiring tools for automated feedback processing</li>
 </ul>
 </section>
 <section id="value-proposition" class="level2">
 <h2 class="anchored" data-anchor-id="value-proposition">Value Proposition</h2>
 <ul>
-<li>Reduce loan default rates through more accurate risk assessment</li>
-<li>Increase loan approval rates for qualified borrowers</li>
-<li>Reduce application processing time</li>
-<li>Improve consistency and fairness in lending decisions</li>
-<li>Enable regulatory compliance through transparent decision-making</li>
+<li>Accurately predict the rating of a review based on the textual content, enhancing the understanding of customer sentiments</li>
+<li>Provide a tool for real-time feedback analysis, which can scale across thousands of reviews without manual intervention</li>
+<li>Offer insights that can guide product improvements and marketing strategies</li>
+<li>Enable businesses to quickly identify areas needing attention by quantifying customer satisfaction through ratings</li>
 </ul>
 </section>
 <section id="product" class="level2">
 <h2 class="anchored" data-anchor-id="product">Product</h2>
-<p>Credit officers will receive a streamlined workflow where they: 1. Input standard loan application data into a familiar interface 2. Receive an immediate risk assessment score with key contributing factors 3. View detailed explanations of risk factors in an intuitive dashboard 4. Override recommendations with documented justification when needed 5. Generate standardized reports for audit and compliance purposes</p>
+<p>Users will interact with a predictive model that offers:</p>
+<ol type="1">
+<li>A pre-trained model fine-tuned on the Amazon Fine Food Reviews dataset to predict ratings from review text</li>
+<li>An API to integrate this model into existing customer feedback systems or dashboards</li>
+<li>Customizable model parameters that allow adaptation to specific business needs or datasets</li>
+<li>Comprehensive documentation on model deployment and integration</li>
+<li>Ongoing support and updates based on the latest advancements in NLP</li>
+</ol>
 </section>
 <section id="objectives" class="level2">
 <h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
 <ol type="1">
-<li>Deploy MVP risk assessment system to pilot branch by Q4 2024</li>
-<li>Achieve 90% user adoption among credit officers within 6 months of launch</li>
-<li>Demonstrate statistical fairness across demographic groups within the next quarter after launch</li>
-<li>Obtain regulatory approval by mid 2025</li>
+<li>Develop and validate a model that predicts ratings from review text with an accuracy exceeding 80% by Q2 2025</li>
+<li>Launch a pilot with a major e-commerce platform to integrate the predictive model by Q3 20253.</li>
+<li>Achieve a user adoption rate of 50% among targeted customer segments within one year of release</li>
+<li>Collect and incorporate user feedback to refine the model and increase its prediction accuracy by Q4 2025</li>
 </ol>
 </section>
 <section id="risks-challenges" class="level2">
 <h2 class="anchored" data-anchor-id="risks-challenges">Risks &amp; Challenges</h2>
-<ol type="1">
-<li>Data Privacy &amp; Security
 <ul>
-<li>Handling sensitive financial and personal information</li>
-<li>Ensuring compliance with data protection regulations</li>
-<li>Securing data transfer between systems</li>
-</ul></li>
-<li>User Adoption
-<ul>
-<li>Resistance from experienced credit officers</li>
-<li>Training requirements for new system</li>
-<li>Integration with existing workflows</li>
-</ul></li>
-<li>Regulatory Compliance
-<ul>
-<li>Meeting fair lending requirements</li>
-<li>Providing required transparency in decisions</li>
-<li>Maintaining audit trails</li>
-</ul></li>
-</ol>
+<li>Ensuring the model accurately interprets various linguistic nuances and sentiments expressed in review texts</li>
+<li>Handling the diversity of product contexts within reviews which may affect rating predictions</li>
+<li>Addressing the potential biases in the training data which could skew prediction outcomes</li>
+<li>Managing the expectations of stakeholders regarding the predictive accuracy and applicability of the model across different product categories</li>
+</ul>
 </section>
 </section>
 <section id="ml-view" class="level1">
 <h1>ML View</h1>
 <section id="task" class="level2">
 <h2 class="anchored" data-anchor-id="task">Task</h2>
-<p>This is a binary classification problem predicting credit risk based on the provided dataset (dataset_id_96.csv). According to the code and data samples, we need to predict ‘y’ (True/False) indicating whether a loan application represents a good or bad credit risk.</p>
+<p>This project involves a multi-class classification task using natural language processing to predict the rating (from 1 to 5) of a product based on customer review text. The RoBERTa language model, pre-trained on a diverse text corpus, will be fine-tuned on the Amazon Fine Food Reviews dataset.</p>
 </section>
 <section id="metrics" class="level2">
 <h2 class="anchored" data-anchor-id="metrics">Metrics</h2>
 <ul>
-<li><p>Primary: F1 score (currently being tracked in evaluate_model function)</p></li>
-<li><p>Supporting metrics:</p>
-<ul>
-<li>Accuracy</li>
-<li>Precision</li>
-<li>Recall</li>
-<li>Target drift score (monitored via Evidently)</li>
-</ul></li>
+<li>Primary: Accuracy of predicted ratings</li>
+<li>Supporting metrics:
+<ol type="1">
+<li>Mean Squared Error (MSE) – to quantify the average of the squares of the errors between the predicted and actual ratings.</li>
+<li>F1 Score for each class – to understand the balance between precision and recall across different rating levels.</li>
+<li>Confusion Matrix – to visualize the performance of the algorithm across the rating categories.</li>
+</ol></li>
 </ul>
 </section>
 <section id="evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="evaluation">Evaluation</h2>
-<p>Based on the provided pipeline code, evaluation happens through: 1. Train/test split with configurable test size 2. Target drift detection between training and test sets using Evidently 3. Model performance tracking via MLflow 4. Production monitoring through FastAPI logging 5. Regular retraining evaluation</p>
+<p>Evaluation will be performed as follows:</p>
+<ol type="1">
+<li>Train/test split with 80/20 ratio to ensure sufficient testing data.</li>
+<li>Application of cross-validation techniques to gauge the model’s performance across different subsets of data.</li>
+<li>Use of libraries like scikit-learn for implementing the training sessions and generating evaluation metrics.</li>
+<li>Regular monitoring of model performance during training to adjust parameters and improve outcomes.</li>
+<li>Periodic updates and re-evaluation post-deployment to adapt to new data and user feedback.</li>
+</ol>
 </section>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <ul>
-<li><p>Primary dataset: dataset_id_96.csv</p></li>
-<li><p>Features include:</p>
+<li>Primary dataset: Amazon Fine Food Reviews dataset</li>
+<li>Features include:
 <ul>
-<li>Credit history attributes (checking_status, credit_history, etc.)</li>
-<li>Personal information (age, employment, etc.)</li>
-<li>Loan details (duration, credit_amount, etc.)</li>
-<li>Generated features (X_1 through X_10)</li>
+<li>Text of the review – Main feature used for training the model.</li>
+<li>Length of the review – Secondary feature that may be considered during feature engineering.</li>
+<li>User and product metadata – Such as user ID and product ID that can be encoded and used for model enhancements.</li>
 </ul></li>
-<li><p>Data Pipeline:</p>
+<li>Data Pipeline:
 <ul>
-<li>Raw data ingestion via Kedro</li>
-<li>Data quality checks</li>
-<li>Preprocessing including scaling and encoding</li>
-<li>Feature engineering</li>
-<li>Train/test splitting</li>
+<li>Data ingestion from dataset archives.</li>
+<li>Initial data cleaning to remove any irrelevant or missing data.</li>
+<li>Preprocessing steps including tokenization and encoding of text data using RoBERTa’s tokenizer.</li>
+<li>Feature engineering to potentially include review length and user/product interaction effects.</li>
+<li>Train/test split as per the evaluation plan.</li>
 </ul></li>
 </ul>
 </section>
@@ -378,24 +375,21 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Phase 1 - Initial Development
 <ul>
-<li>Enhance current data pipeline</li>
-<li>Implement additional data quality checks</li>
-<li>Develop model monitoring dashboard</li>
-<li>Complete initial model training</li>
+<li>Set up data preprocessing pipelines to prepare the review texts for model training.</li>
+<li>Implement a prototype model using a pre-trained RoBERTa model fine-tuned on the review data.</li>
+<li>Develop a baseline model and benchmark its initial performance.</li>
 </ul></li>
-<li>Phase 2 - Pilot
+<li>Phase 2 - Model Optimization
 <ul>
-<li>Deploy to pilot branch</li>
-<li>Gather user feedback</li>
-<li>Refine model based on real usage</li>
-<li>Implement A/B testing framework</li>
+<li>Refine the model based on initial test results, focusing on improving accuracy and reducing MSE.</li>
+<li>Explore advanced NLP techniques such as sentiment embedding to enhance model understanding.</li>
+<li>Conduct extensive testing and validation to ensure robustness and scalability.</li>
 </ul></li>
-<li>Phase 3 - Scale
+<li>Phase 3 - Deployment and Monitoring
 <ul>
-<li>Roll out to additional branches</li>
-<li>Implement automated retraining pipeline</li>
-<li>Enhance monitoring and alerting</li>
-<li>Develop fallback procedures</li>
+<li>Deploy the model through an API for real-time rating prediction.</li>
+<li>Establish a monitoring system using frameworks like TensorFlow Extended (TFX) for continuous evaluation.</li>
+<li>Gather and incorporate user feedback to further refine the model.</li>
 </ul></li>
 </ol>
 </section>
@@ -404,16 +398,16 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Automated monitoring via:
 <ul>
-<li>MLflow experiment tracking</li>
-<li>FastAPI request logging</li>
-<li>Evidently drift detection</li>
+<li>MLflow for experiment tracking to monitor model training sessions and hyperparameter tuning results.</li>
+<li>Custom logs in the model serving API to track predictions and request patterns, identifying potential anomalies or shifts in data distribution.</li>
+<li>Utilizing Evidently or similar tools to detect drift in data features or predictions over time.</li>
 </ul></li>
 <li>Regular Updates:
 <ul>
-<li>Model retraining based on drift detection</li>
-<li>Feature importance analysis</li>
-<li>Performance metric tracking</li>
-<li>User feedback incorporation</li>
+<li>Periodic model retraining based on detected drift and performance metrics.</li>
+<li>Ongoing analysis of feature importance to refine and optimize input variables.</li>
+<li>Tracking of performance metrics such as accuracy and MSE to ensure the model meets business expectations.</li>
+<li>Incorporation of user feedback into model updates to enhance functionality and user satisfaction.</li>
 </ul></li>
 </ol>
 </section>
@@ -424,20 +418,20 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Data Science Team:
 <ul>
-<li>1 ML Engineers (model development)</li>
-<li>1 Data Engineer (pipeline maintenance)</li>
-<li>1 MLOps Engineer (deployment/monitoring)</li>
+<li>1 ML Engineer responsible for model development and iteration.</li>
+<li>1 Data Engineer to manage data pipelines and ensure data quality and availability.</li>
+<li>1 MLOps Engineer to oversee the deployment, scaling, and monitoring of the model in production.</li>
 </ul></li>
 <li>Product Team:
 <ul>
-<li>1 Product Manager</li>
-<li>1 UX Designer</li>
-<li>1 Full-stack Developers</li>
+<li>1 Product Manager to coordinate project activities, aligning them with business goals.</li>
+<li>1 UX Designer to design and test the model interface to ensure usability.</li>
+<li>2 Full-stack Developers to integrate the model with the back-end systems and handle the front-end development.</li>
 </ul></li>
 <li>Domain Experts:
 <ul>
-<li>1 Credit Risk Officer</li>
-<li>1 Compliance Officer</li>
+<li>1 NLP Scientist with expertise in text analysis and natural language understanding to provide guidance on model training and evaluation.</li>
+<li>1 User Experience Researcher to gather and interpret customer feedback to drive product improvements.</li>
 </ul></li>
 </ol>
 </section>
@@ -446,24 +440,23 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Development:
 <ul>
-<li>Kedro pipeline execution environment</li>
-<li>MLflow tracking server</li>
-<li>Development databases</li>
+<li>Utilization of a local or cloud-based environment with Kedro for pipeline management.</li>
+<li>MLflow hosted on a dedicated server or cloud instance for tracking experiments and model versions.</li>
+<li>Development databases to manage datasets, annotations, and test results.</li>
 </ul></li>
 <li>Production:
 <ul>
-<li>FastAPI server for model serving</li>
-<li>Model artifact storage</li>
-<li>Monitoring infrastructure</li>
-<li>Load balancing for high availability</li>
-<li>Backup and disaster recovery systems</li>
+<li>Deployment on a cloud platform such as AWS or Azure, utilizing their managed services for scalability and reliability.</li>
+<li>Dedicated storage for model artifacts and a robust logging system for monitoring model performance.</li>
+<li>Load balancing across multiple servers to manage the API’s user requests efficiently.</li>
+<li>Implementation of backup and disaster recovery strategies to ensure service continuity.</li>
 </ul></li>
 <li>Storage:
 <ul>
-<li>Secure data warehouse for sensitive information</li>
-<li>Model registry</li>
-<li>Log storage</li>
-<li>Backup storage</li>
+<li>Secure cloud storage solutions for sensitive data, ensuring compliance with data protection regulations.</li>
+<li>A model registry to manage different versions of the trained models.</li>
+<li>Log storage for maintaining detailed records of system operations and user interactions.</li>
+<li>Backup systems to safeguard data against accidental loss or corruption.</li>
 </ul></li>
 </ol>
 

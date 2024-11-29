@@ -146,7 +146,7 @@
     "href": "cards/project_card.html",
     "title": "Project Card",
     "section": "",
-    "text": "Financial institutions face significant challenges in assessing credit risk for loan applications. Traditional credit scoring methods often miss nuanced patterns and can be biased against certain demographic groups. This leads to both missed opportunities for good borrowers being denied and increased risk from bad loans being approved. In today’s competitive banking environment, institutions need more sophisticated ways to evaluate credit applications while maintaining regulatory compliance and fairness.\n\n\n\nBanks need to accurately assess the creditworthiness of loan applicants to minimize default risk while maximizing approved loans to qualified borrowers. Currently, credit officers spend significant time manually reviewing applications and may make inconsistent decisions based on limited information. This results in both lost revenue from good applications being rejected and losses from bad loans being approved.\n\n\n\nPrimary customers are:\n\nCredit risk officers at medium to large retail banks\nLoan application processing teams\nBanking compliance officers responsible for fair lending practices\nFinancial institutions serving diverse demographic populations\n\n\n\n\n\nReduce loan default rates through more accurate risk assessment\nIncrease loan approval rates for qualified borrowers\nReduce application processing time\nImprove consistency and fairness in lending decisions\nEnable regulatory compliance through transparent decision-making\n\n\n\n\nCredit officers will receive a streamlined workflow where they: 1. Input standard loan application data into a familiar interface 2. Receive an immediate risk assessment score with key contributing factors 3. View detailed explanations of risk factors in an intuitive dashboard 4. Override recommendations with documented justification when needed 5. Generate standardized reports for audit and compliance purposes\n\n\n\n\nDeploy MVP risk assessment system to pilot branch by Q4 2024\nAchieve 90% user adoption among credit officers within 6 months of launch\nDemonstrate statistical fairness across demographic groups within the next quarter after launch\nObtain regulatory approval by mid 2025\n\n\n\n\n\nData Privacy & Security\n\nHandling sensitive financial and personal information\nEnsuring compliance with data protection regulations\nSecuring data transfer between systems\n\nUser Adoption\n\nResistance from experienced credit officers\nTraining requirements for new system\nIntegration with existing workflows\n\nRegulatory Compliance\n\nMeeting fair lending requirements\nProviding required transparency in decisions\nMaintaining audit trails",
+    "text": "The volume of user-generated content in the form of product reviews is a valuable source of customer sentiment and preferences. These reviews, when quantified into ratings, can provide significant insights for businesses, helping improve their products and services. By leveraging natural language processing, specifically sentiment analysis, businesses can automate the interpretation of vast amounts of textual feedback into structured ratings.\n\n\n\nWhile textual reviews provide detailed insights, manually interpreting them is time-consuming and subject to bias. An automated system that predicts numerical ratings based on review text can provide a more objective and scalable method for understanding customer satisfaction and expectations.\n\n\n\nThe primary customers for this project are:\n\nE-commerce platforms that aggregate customer reviews\nMarketing and product development teams interested in customer feedback analysis\nConsumer insight analysts focusing on sentiment analysis\nCompanies requiring tools for automated feedback processing\n\n\n\n\n\nAccurately predict the rating of a review based on the textual content, enhancing the understanding of customer sentiments\nProvide a tool for real-time feedback analysis, which can scale across thousands of reviews without manual intervention\nOffer insights that can guide product improvements and marketing strategies\nEnable businesses to quickly identify areas needing attention by quantifying customer satisfaction through ratings\n\n\n\n\nUsers will interact with a predictive model that offers:\n\nA pre-trained model fine-tuned on the Amazon Fine Food Reviews dataset to predict ratings from review text\nAn API to integrate this model into existing customer feedback systems or dashboards\nCustomizable model parameters that allow adaptation to specific business needs or datasets\nComprehensive documentation on model deployment and integration\nOngoing support and updates based on the latest advancements in NLP\n\n\n\n\n\nDevelop and validate a model that predicts ratings from review text with an accuracy exceeding 80% by Q2 2025\nLaunch a pilot with a major e-commerce platform to integrate the predictive model by Q3 20253.\nAchieve a user adoption rate of 50% among targeted customer segments within one year of release\nCollect and incorporate user feedback to refine the model and increase its prediction accuracy by Q4 2025\n\n\n\n\n\nEnsuring the model accurately interprets various linguistic nuances and sentiments expressed in review texts\nHandling the diversity of product contexts within reviews which may affect rating predictions\nAddressing the potential biases in the training data which could skew prediction outcomes\nManaging the expectations of stakeholders regarding the predictive accuracy and applicability of the model across different product categories",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -157,7 +157,7 @@
     "href": "cards/project_card.html#background",
     "title": "Project Card",
     "section": "",
-    "text": "Financial institutions face significant challenges in assessing credit risk for loan applications. Traditional credit scoring methods often miss nuanced patterns and can be biased against certain demographic groups. This leads to both missed opportunities for good borrowers being denied and increased risk from bad loans being approved. In today’s competitive banking environment, institutions need more sophisticated ways to evaluate credit applications while maintaining regulatory compliance and fairness.",
+    "text": "The volume of user-generated content in the form of product reviews is a valuable source of customer sentiment and preferences. These reviews, when quantified into ratings, can provide significant insights for businesses, helping improve their products and services. By leveraging natural language processing, specifically sentiment analysis, businesses can automate the interpretation of vast amounts of textual feedback into structured ratings.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -168,7 +168,7 @@
     "href": "cards/project_card.html#problem",
     "title": "Project Card",
     "section": "",
-    "text": "Banks need to accurately assess the creditworthiness of loan applicants to minimize default risk while maximizing approved loans to qualified borrowers. Currently, credit officers spend significant time manually reviewing applications and may make inconsistent decisions based on limited information. This results in both lost revenue from good applications being rejected and losses from bad loans being approved.",
+    "text": "While textual reviews provide detailed insights, manually interpreting them is time-consuming and subject to bias. An automated system that predicts numerical ratings based on review text can provide a more objective and scalable method for understanding customer satisfaction and expectations.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -179,7 +179,7 @@
     "href": "cards/project_card.html#customer",
     "title": "Project Card",
     "section": "",
-    "text": "Primary customers are:\n\nCredit risk officers at medium to large retail banks\nLoan application processing teams\nBanking compliance officers responsible for fair lending practices\nFinancial institutions serving diverse demographic populations",
+    "text": "The primary customers for this project are:\n\nE-commerce platforms that aggregate customer reviews\nMarketing and product development teams interested in customer feedback analysis\nConsumer insight analysts focusing on sentiment analysis\nCompanies requiring tools for automated feedback processing",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -190,7 +190,7 @@
     "href": "cards/project_card.html#value-proposition",
     "title": "Project Card",
     "section": "",
-    "text": "Reduce loan default rates through more accurate risk assessment\nIncrease loan approval rates for qualified borrowers\nReduce application processing time\nImprove consistency and fairness in lending decisions\nEnable regulatory compliance through transparent decision-making",
+    "text": "Accurately predict the rating of a review based on the textual content, enhancing the understanding of customer sentiments\nProvide a tool for real-time feedback analysis, which can scale across thousands of reviews without manual intervention\nOffer insights that can guide product improvements and marketing strategies\nEnable businesses to quickly identify areas needing attention by quantifying customer satisfaction through ratings",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -201,7 +201,7 @@
     "href": "cards/project_card.html#product",
     "title": "Project Card",
     "section": "",
-    "text": "Credit officers will receive a streamlined workflow where they: 1. Input standard loan application data into a familiar interface 2. Receive an immediate risk assessment score with key contributing factors 3. View detailed explanations of risk factors in an intuitive dashboard 4. Override recommendations with documented justification when needed 5. Generate standardized reports for audit and compliance purposes",
+    "text": "Users will interact with a predictive model that offers:\n\nA pre-trained model fine-tuned on the Amazon Fine Food Reviews dataset to predict ratings from review text\nAn API to integrate this model into existing customer feedback systems or dashboards\nCustomizable model parameters that allow adaptation to specific business needs or datasets\nComprehensive documentation on model deployment and integration\nOngoing support and updates based on the latest advancements in NLP",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -212,7 +212,7 @@
     "href": "cards/project_card.html#objectives",
     "title": "Project Card",
     "section": "",
-    "text": "Deploy MVP risk assessment system to pilot branch by Q4 2024\nAchieve 90% user adoption among credit officers within 6 months of launch\nDemonstrate statistical fairness across demographic groups within the next quarter after launch\nObtain regulatory approval by mid 2025",
+    "text": "Develop and validate a model that predicts ratings from review text with an accuracy exceeding 80% by Q2 2025\nLaunch a pilot with a major e-commerce platform to integrate the predictive model by Q3 20253.\nAchieve a user adoption rate of 50% among targeted customer segments within one year of release\nCollect and incorporate user feedback to refine the model and increase its prediction accuracy by Q4 2025",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -223,7 +223,7 @@
     "href": "cards/project_card.html#risks-challenges",
     "title": "Project Card",
     "section": "",
-    "text": "Data Privacy & Security\n\nHandling sensitive financial and personal information\nEnsuring compliance with data protection regulations\nSecuring data transfer between systems\n\nUser Adoption\n\nResistance from experienced credit officers\nTraining requirements for new system\nIntegration with existing workflows\n\nRegulatory Compliance\n\nMeeting fair lending requirements\nProviding required transparency in decisions\nMaintaining audit trails",
+    "text": "Ensuring the model accurately interprets various linguistic nuances and sentiments expressed in review texts\nHandling the diversity of product contexts within reviews which may affect rating predictions\nAddressing the potential biases in the training data which could skew prediction outcomes\nManaging the expectations of stakeholders regarding the predictive accuracy and applicability of the model across different product categories",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -234,7 +234,7 @@
     "href": "cards/project_card.html#task",
     "title": "Project Card",
     "section": "Task",
-    "text": "Task\nThis is a binary classification problem predicting credit risk based on the provided dataset (dataset_id_96.csv). According to the code and data samples, we need to predict ‘y’ (True/False) indicating whether a loan application represents a good or bad credit risk.",
+    "text": "Task\nThis project involves a multi-class classification task using natural language processing to predict the rating (from 1 to 5) of a product based on customer review text. The RoBERTa language model, pre-trained on a diverse text corpus, will be fine-tuned on the Amazon Fine Food Reviews dataset.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -245,7 +245,7 @@
     "href": "cards/project_card.html#metrics",
     "title": "Project Card",
     "section": "Metrics",
-    "text": "Metrics\n\nPrimary: F1 score (currently being tracked in evaluate_model function)\nSupporting metrics:\n\nAccuracy\nPrecision\nRecall\nTarget drift score (monitored via Evidently)",
+    "text": "Metrics\n\nPrimary: Accuracy of predicted ratings\nSupporting metrics:\n\nMean Squared Error (MSE) – to quantify the average of the squares of the errors between the predicted and actual ratings.\nF1 Score for each class – to understand the balance between precision and recall across different rating levels.\nConfusion Matrix – to visualize the performance of the algorithm across the rating categories.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -256,7 +256,7 @@
     "href": "cards/project_card.html#evaluation",
     "title": "Project Card",
     "section": "Evaluation",
-    "text": "Evaluation\nBased on the provided pipeline code, evaluation happens through: 1. Train/test split with configurable test size 2. Target drift detection between training and test sets using Evidently 3. Model performance tracking via MLflow 4. Production monitoring through FastAPI logging 5. Regular retraining evaluation",
+    "text": "Evaluation\nEvaluation will be performed as follows:\n\nTrain/test split with 80/20 ratio to ensure sufficient testing data.\nApplication of cross-validation techniques to gauge the model’s performance across different subsets of data.\nUse of libraries like scikit-learn for implementing the training sessions and generating evaluation metrics.\nRegular monitoring of model performance during training to adjust parameters and improve outcomes.\nPeriodic updates and re-evaluation post-deployment to adapt to new data and user feedback.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -267,7 +267,7 @@
     "href": "cards/project_card.html#data",
     "title": "Project Card",
     "section": "Data",
-    "text": "Data\n\nPrimary dataset: dataset_id_96.csv\nFeatures include:\n\nCredit history attributes (checking_status, credit_history, etc.)\nPersonal information (age, employment, etc.)\nLoan details (duration, credit_amount, etc.)\nGenerated features (X_1 through X_10)\n\nData Pipeline:\n\nRaw data ingestion via Kedro\nData quality checks\nPreprocessing including scaling and encoding\nFeature engineering\nTrain/test splitting",
+    "text": "Data\n\nPrimary dataset: Amazon Fine Food Reviews dataset\nFeatures include:\n\nText of the review – Main feature used for training the model.\nLength of the review – Secondary feature that may be considered during feature engineering.\nUser and product metadata – Such as user ID and product ID that can be encoded and used for model enhancements.\n\nData Pipeline:\n\nData ingestion from dataset archives.\nInitial data cleaning to remove any irrelevant or missing data.\nPreprocessing steps including tokenization and encoding of text data using RoBERTa’s tokenizer.\nFeature engineering to potentially include review length and user/product interaction effects.\nTrain/test split as per the evaluation plan.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -278,7 +278,7 @@
     "href": "cards/project_card.html#planroadmap",
     "title": "Project Card",
     "section": "Plan/Roadmap",
-    "text": "Plan/Roadmap\n\nPhase 1 - Initial Development\n\nEnhance current data pipeline\nImplement additional data quality checks\nDevelop model monitoring dashboard\nComplete initial model training\n\nPhase 2 - Pilot\n\nDeploy to pilot branch\nGather user feedback\nRefine model based on real usage\nImplement A/B testing framework\n\nPhase 3 - Scale\n\nRoll out to additional branches\nImplement automated retraining pipeline\nEnhance monitoring and alerting\nDevelop fallback procedures",
+    "text": "Plan/Roadmap\n\nPhase 1 - Initial Development\n\nSet up data preprocessing pipelines to prepare the review texts for model training.\nImplement a prototype model using a pre-trained RoBERTa model fine-tuned on the review data.\nDevelop a baseline model and benchmark its initial performance.\n\nPhase 2 - Model Optimization\n\nRefine the model based on initial test results, focusing on improving accuracy and reducing MSE.\nExplore advanced NLP techniques such as sentiment embedding to enhance model understanding.\nConduct extensive testing and validation to ensure robustness and scalability.\n\nPhase 3 - Deployment and Monitoring\n\nDeploy the model through an API for real-time rating prediction.\nEstablish a monitoring system using frameworks like TensorFlow Extended (TFX) for continuous evaluation.\nGather and incorporate user feedback to further refine the model.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -289,7 +289,7 @@
     "href": "cards/project_card.html#continuous-improvement",
     "title": "Project Card",
     "section": "Continuous Improvement",
-    "text": "Continuous Improvement\n\nAutomated monitoring via:\n\nMLflow experiment tracking\nFastAPI request logging\nEvidently drift detection\n\nRegular Updates:\n\nModel retraining based on drift detection\nFeature importance analysis\nPerformance metric tracking\nUser feedback incorporation",
+    "text": "Continuous Improvement\n\nAutomated monitoring via:\n\nMLflow for experiment tracking to monitor model training sessions and hyperparameter tuning results.\nCustom logs in the model serving API to track predictions and request patterns, identifying potential anomalies or shifts in data distribution.\nUtilizing Evidently or similar tools to detect drift in data features or predictions over time.\n\nRegular Updates:\n\nPeriodic model retraining based on detected drift and performance metrics.\nOngoing analysis of feature importance to refine and optimize input variables.\nTracking of performance metrics such as accuracy and MSE to ensure the model meets business expectations.\nIncorporation of user feedback into model updates to enhance functionality and user satisfaction.",
     "crumbs": [
       "Cards",
       "Project Card"
@@ -300,7 +300,7 @@
     "href": "cards/project_card.html#resources",
     "title": "Project Card",
     "section": "Resources",
-    "text": "Resources\n\nHuman Resources\n\nData Science Team:\n\n1 ML Engineers (model development)\n1 Data Engineer (pipeline maintenance)\n1 MLOps Engineer (deployment/monitoring)\n\nProduct Team:\n\n1 Product Manager\n1 UX Designer\n1 Full-stack Developers\n\nDomain Experts:\n\n1 Credit Risk Officer\n1 Compliance Officer\n\n\n\n\nCompute Resources\n\nDevelopment:\n\nKedro pipeline execution environment\nMLflow tracking server\nDevelopment databases\n\nProduction:\n\nFastAPI server for model serving\nModel artifact storage\nMonitoring infrastructure\nLoad balancing for high availability\nBackup and disaster recovery systems\n\nStorage:\n\nSecure data warehouse for sensitive information\nModel registry\nLog storage\nBackup storage",
+    "text": "Resources\n\nHuman Resources\n\nData Science Team:\n\n1 ML Engineer responsible for model development and iteration.\n1 Data Engineer to manage data pipelines and ensure data quality and availability.\n1 MLOps Engineer to oversee the deployment, scaling, and monitoring of the model in production.\n\nProduct Team:\n\n1 Product Manager to coordinate project activities, aligning them with business goals.\n1 UX Designer to design and test the model interface to ensure usability.\n2 Full-stack Developers to integrate the model with the back-end systems and handle the front-end development.\n\nDomain Experts:\n\n1 NLP Scientist with expertise in text analysis and natural language understanding to provide guidance on model training and evaluation.\n1 User Experience Researcher to gather and interpret customer feedback to drive product improvements.\n\n\n\n\nCompute Resources\n\nDevelopment:\n\nUtilization of a local or cloud-based environment with Kedro for pipeline management.\nMLflow hosted on a dedicated server or cloud instance for tracking experiments and model versions.\nDevelopment databases to manage datasets, annotations, and test results.\n\nProduction:\n\nDeployment on a cloud platform such as AWS or Azure, utilizing their managed services for scalability and reliability.\nDedicated storage for model artifacts and a robust logging system for monitoring model performance.\nLoad balancing across multiple servers to manage the API’s user requests efficiently.\nImplementation of backup and disaster recovery strategies to ensure service continuity.\n\nStorage:\n\nSecure cloud storage solutions for sensitive data, ensuring compliance with data protection regulations.\nA model registry to manage different versions of the trained models.\nLog storage for maintaining detailed records of system operations and user interactions.\nBackup systems to safeguard data against accidental loss or corruption.",
     "crumbs": [
       "Cards",
       "Project Card"
